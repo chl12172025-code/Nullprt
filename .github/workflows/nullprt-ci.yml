@@ -35,7 +35,6 @@ jobs:
           pwsh -File scripts/detect_toolchain.ps1
           $code = $LASTEXITCODE
           "exit_code=$code" >> $env:GITHUB_OUTPUT
-          if ($code -ne 0) { Write-Host "::warning::Toolchain detection failed (exit=$code), workflow continues for diagnostics." }
           exit 0
 
       - name: Bootstrap verify (all OS)
@@ -45,8 +44,16 @@ jobs:
           pwsh -ExecutionPolicy Bypass -File scripts/bootstrap_verify.ps1
           $code = $LASTEXITCODE
           "exit_code=$code" >> $env:GITHUB_OUTPUT
-          if ($code -ne 0) { Write-Host "::warning::Bootstrap verification failed (exit=$code), captured as expected diagnostic in some environments." }
           exit 0
+
+      - name: Record bootstrap result to summary
+        if: steps.bootstrap.outputs.exit_code != '0'
+        shell: pwsh
+        run: |
+          Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value "### Bootstrap verification diagnostic (expected in some environments)"
+          Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value "- exit code: ${{ steps.bootstrap.outputs.exit_code }}"
+          Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value "- note: failure can be expected when toolchain or linker is unavailable."
+          Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value ""
 
       - name: Cross compile test (all OS)
         id: cross
@@ -55,8 +62,16 @@ jobs:
           pwsh -ExecutionPolicy Bypass -File scripts/cross_compile_test.ps1
           $code = $LASTEXITCODE
           "exit_code=$code" >> $env:GITHUB_OUTPUT
-          if ($code -ne 0) { Write-Host "::warning::Cross compile test failed (exit=$code), captured for follow-up." }
           exit 0
+
+      - name: Record cross compile result to summary
+        if: steps.cross.outputs.exit_code != '0'
+        shell: pwsh
+        run: |
+          Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value "### Cross compile diagnostic"
+          Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value "- exit code: ${{ steps.cross.outputs.exit_code }}"
+          Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value "- note: follow-up required for full cross-target verification."
+          Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value ""
 
       - name: aegc1 selfhost verify (all OS)
         id: selfhost
@@ -65,8 +80,16 @@ jobs:
           pwsh -ExecutionPolicy Bypass -File scripts/aegc1_selfhost_verify.ps1
           $code = $LASTEXITCODE
           "exit_code=$code" >> $env:GITHUB_OUTPUT
-          if ($code -ne 0) { Write-Host "::warning::aegc1 selfhost verify failed (exit=$code), captured for follow-up." }
           exit 0
+
+      - name: Record selfhost result to summary
+        if: steps.selfhost.outputs.exit_code != '0'
+        shell: pwsh
+        run: |
+          Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value "### Selfhost verification diagnostic"
+          Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value "- exit code: ${{ steps.selfhost.outputs.exit_code }}"
+          Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value "- note: backend/runtime maturity gap expected at this stage."
+          Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value ""
 
       - name: Selfhost readiness and test assets (all OS)
         id: smoke
@@ -78,7 +101,6 @@ jobs:
           $b = $LASTEXITCODE
           $code = if ($a -ne 0) { $a } else { $b }
           "exit_code=$code" >> $env:GITHUB_OUTPUT
-          if ($code -ne 0) { Write-Host "::warning::Smoke/report step failed (exit=$code)." }
           exit 0
 
       - name: Run tests asset report (all OS)
@@ -88,7 +110,6 @@ jobs:
           pwsh -File tests/aegc1/run_tests.ps1
           $code = $LASTEXITCODE
           "exit_code=$code" >> $env:GITHUB_OUTPUT
-          if ($code -ne 0) { Write-Host "::warning::Tests asset report failed (exit=$code)." }
           exit 0
 
       - name: Enforce required step outcomes

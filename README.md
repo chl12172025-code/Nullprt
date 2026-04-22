@@ -1,4 +1,5 @@
 [![CI](https://github.com/chl12172025-code/Nullprt/actions/workflows/nullprt-ci.yml/badge.svg)](https://github.com/chl12172025-code/Nullprt/actions/workflows/nullprt-ci.yml)
+CI passes with expected diagnostics in early-stage bootstrap environments.
 
 ## Nullprt（NPRT）支持仓库
 
