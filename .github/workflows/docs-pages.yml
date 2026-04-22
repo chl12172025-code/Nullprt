@@ -10,6 +10,9 @@ permissions:
   pages: write
   id-token: write
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -20,13 +23,12 @@ jobs:
         run: |
           pwsh -File scripts/generate_api_docs.ps1
       - name: Build static docs site
-        shell: pwsh
+        shell: bash
         run: |
-          New-Item -ItemType Directory -Force -Path site | Out-Null
-          New-Item -ItemType Directory -Force -Path site/examples | Out-Null
-          Copy-Item docs/* site/ -Recurse -Force
-          if (Test-Path examples) { Copy-Item examples/* site/examples/ -Recurse -Force }
-          Copy-Item docs/index.html site/index.html -Force
+          mkdir -p site/examples
+          cp -r docs/* site/
+          if [ -d examples ]; then cp -r examples/* site/examples/; fi
+          cp docs/index.html site/index.html
       - name: Setup Pages
         uses: actions/configure-pages@v5
       - name: Upload Pages artifact
