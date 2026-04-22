@@ -1,0 +1,6 @@
+{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"capabilities":{}}}
+{"jsonrpc":"2.0","method":"initialized","params":{}}
+{"jsonrpc":"2.0","method":"textDocument/didOpen","params":{"textDocument":{"uri":"file:///main.nprt","languageId":"nprt","version":1,"text":"fn main() -> i32 { return 0; }"}}}
+{"jsonrpc":"2.0","id":2,"method":"textDocument/completion","params":{"textDocument":{"uri":"file:///main.nprt"},"position":{"line":0,"character":3}}}
+{"jsonrpc":"2.0","id":3,"method":"shutdown","params":null}
+{"jsonrpc":"2.0","method":"exit","params":null}

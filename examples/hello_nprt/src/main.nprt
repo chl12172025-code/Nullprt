@@ -1,0 +1,7 @@
+// Placeholder source file for the MVP compiler milestones.
+// The exact syntax will be finalized in `docs/10-language.md` and implemented by `aegc`.
+
+fn main() -> i32 {
+  // MVP can print via C ABI (puts) or sys::stdout later.
+  return 0;
+}

@@ -1,0 +1,5 @@
+﻿result: blocked
+reason: no C compiler toolchain detected
+stage: Stage0 (aegc0 build)
+toolchain_detected: false
+hint: install Visual Studio Build Tools or LLVM/Clang or MinGW

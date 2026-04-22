@@ -1,0 +1,8 @@
+nprtcfg 0.1.0;
+
+registry.default = "central";
+registry.mirrors = ["https://repo.nullprt.example/mirror1"];
+
+packages {
+  libc = { version: "0.2.0", registry: "central", integrity: "sha256:aaaaaaaa", download_url: "https://repo.nullprt.example/pkg/libc/0.2.0/libc.npkg" };
+}

@@ -1,0 +1,64 @@
+#include "nprt_pkg.h"
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+static const char* env_or(const char* k, const char* def) {
+  const char* v = getenv(k);
+  return v && v[0] ? v : def;
+}
+
+static void usage(void) {
+  fprintf(stderr, "usage:\n");
+  fprintf(stderr, "  nprt-pkg ping <base_url>\n");
+  fprintf(stderr, "  nprt-pkg get <url> <expected_sha256_hex>\n");
+}
+
+int main(int argc, char** argv) {
+  if (argc < 3) { usage(); return 2; }
+  const char* cache = env_or("NPRT_CACHE", ".nprt_cache");
+
+  if (!strcmp(argv[1], "ping")) {
+    char url[1024];
+    snprintf(url, sizeof(url), "%s/v0/ping", argv[2]);
+    NpkgHttpResponse r;
+    if (!npkg_http_get(url, &r)) {
+      fprintf(stderr, "nprt-pkg: http get failed\n");
+      return 1;
+    }
+    printf("status=%d body_len=%zu\n", r.status, r.body.len);
+    npkg_http_free(&r);
+    return 0;
+  }
+
+  if (!strcmp(argv[1], "get")) {
+    if (argc < 4) { usage(); return 2; }
+    const char* url = argv[2];
+    const char* expect = argv[3];
+    NpkgHttpResponse r;
+    if (!npkg_http_get(url, &r)) {
+      fprintf(stderr, "nprt-pkg: http get failed\n");
+      return 1;
+    }
+    char hex[65];
+    npkg_sha256_hex(r.body.data, r.body.len, hex);
+    if (strcmp(hex, expect) != 0) {
+      fprintf(stderr, "nprt-pkg: sha256 mismatch\nexpected=%s\ngot=%s\n", expect, hex);
+      npkg_http_free(&r);
+      return 1;
+    }
+    char cas_path[1024];
+    if (!npkg_cas_put(cache, r.body.data, r.body.len, hex, cas_path, sizeof(cas_path))) {
+      fprintf(stderr, "nprt-pkg: failed to write cas\n");
+      npkg_http_free(&r);
+      return 1;
+    }
+    printf("ok cas=%s\n", cas_path);
+    npkg_http_free(&r);
+    return 0;
+  }
+
+  usage();
+  return 2;
+}

@@ -1,0 +1,5 @@
+﻿abi_spec_present: True
+lsp_replay_present: True
+note:
+- ABI replay executable driver integration is pending compiler+FFI integration.
+- LSP replay transport harness is pending nprt-lsp executable build.

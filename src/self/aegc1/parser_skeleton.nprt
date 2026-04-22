@@ -1,0 +1,5 @@
+// Parser skeleton placeholder (minimal-subset compatible)
+
+fn parser_version() -> i32 {
+  return 1;
+}

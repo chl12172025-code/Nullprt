@@ -1,0 +1,7 @@
+import core.io;
+
+#[cfg(target_os = "windows")]
+fn main<T>(x: i32) -> Result<i32, i32> where T: Copy {
+  let mut v: i32 = 1;
+  if (v < 2) { return 0; } else { return 1; }
+}

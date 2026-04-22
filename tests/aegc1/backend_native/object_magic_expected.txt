@@ -1,0 +1,3 @@
+win: COFF
+linux: 7f454c46
+macos: cffaedfe or feedfacf (host endian)

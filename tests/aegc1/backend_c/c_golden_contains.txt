@@ -1,0 +1,3 @@
+typedef struct A1_Result_i32
+a1_match_enum_i32
+int32_t main(void)

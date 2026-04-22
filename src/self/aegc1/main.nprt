@@ -1,0 +1,11 @@
+// aegc1 initial skeleton (minimal-subset compatible)
+// Stage0 requirement: this file must be compilable by aegc0 (NPRT->C).
+
+extern "C" fn puts(x: u64) -> i32;
+
+fn main() -> i32 {
+  // Placeholder: once aegc1 gains file IO + parsing, this will become a real compiler driver.
+  // For now, just prove a0 -> a1 binary can run.
+  let ok: i32 = 0;
+  return ok;
+}

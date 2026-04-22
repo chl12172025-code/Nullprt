@@ -1,0 +1,8 @@
+﻿status: ready-for-toolchain-validation
+missing_count: 0
+missing_files:
+
+next_steps:
+- Run scripts/detect_toolchain.ps1
+- Build and run scripts/aegc1_selfhost_verify.ps1
+- Run tests/aegc1/run_tests.ps1

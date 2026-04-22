@@ -1,0 +1,5 @@
+﻿result: blocked
+reason: no toolchain detected on Windows
+windows_compile: false
+linux_cmd: cc generated.c -o out_linux
+macos_cmd: cc generated.c -o out_macos

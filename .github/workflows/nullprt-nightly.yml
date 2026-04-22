@@ -1,0 +1,78 @@
+name: nullprt-nightly
+
+on:
+  schedule:
+    - cron: "0 2 * * *"
+  workflow_dispatch:
+
+jobs:
+  nightly-verify:
+    name: nightly-${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, ubuntu-latest, macos-latest]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Detect toolchain
+        id: detect
+        continue-on-error: true
+        shell: pwsh
+        run: |
+          pwsh -File scripts/detect_toolchain.ps1
+
+      - name: Bootstrap verify (all OS)
+        id: bootstrap
+        continue-on-error: true
+        shell: pwsh
+        run: |
+          pwsh -ExecutionPolicy Bypass -File scripts/bootstrap_verify.ps1
+
+      - name: Cross compile test (all OS)
+        id: cross
+        continue-on-error: true
+        shell: pwsh
+        run: |
+          pwsh -ExecutionPolicy Bypass -File scripts/cross_compile_test.ps1
+
+      - name: Selfhost verify (all OS)
+        id: selfhost
+        continue-on-error: true
+        shell: pwsh
+        run: |
+          pwsh -ExecutionPolicy Bypass -File scripts/aegc1_selfhost_verify.ps1
+
+      - name: Script smoke and readiness (all OS)
+        id: smoke
+        continue-on-error: true
+        shell: pwsh
+        run: |
+          pwsh -File scripts/selfhost_readiness_report.ps1
+          pwsh -File tests/aegc1/run_tests.ps1
+
+      - name: Upload nightly reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: nightly-reports-${{ matrix.os }}
+          path: |
+            scripts/*.txt
+            tests/aegc1/test_report.txt
+            build/**
+          if-no-files-found: warn
+
+      - name: Nightly summary
+        if: always()
+        shell: pwsh
+        run: |
+          Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value "## Nullprt Nightly Summary (${{ matrix.os }})"
+          Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value ""
+          if (Test-Path "scripts/selfhost_readiness_report.txt") {
+            Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value '```text'
+            Get-Content "scripts/selfhost_readiness_report.txt" | Add-Content -Path $env:GITHUB_STEP_SUMMARY
+            Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value '```'
+          }

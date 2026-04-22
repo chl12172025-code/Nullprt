@@ -1,0 +1,16 @@
+nprtcfg 0.1.0;
+
+project.name = "hello_nprt";
+project.version = "0.1.0";
+project.description = "Hello world for NPRT MVP.";
+project.license = "MIT";
+project.authors = ["Example Author <dev@example.com>"];
+
+build.targets = ["x86_64-windows-msvc"];
+build.profile = "dev";
+build.opt_level = 0;
+build.obfuscate = false;
+build.features = [];
+
+deps { }
+dev_deps { }

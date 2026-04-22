@@ -1,0 +1,7 @@
+﻿frontend_token_golden: present
+semantic_type_errors: present
+ir_golden_expected: present
+backend_c_golden_contains: present
+backend_native_magic_expected: present
+selfhost_input: present
+note: runtime execution requires compiled aegc1 driver binary.

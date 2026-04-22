@@ -1,0 +1,6 @@
+// NPRT-IR skeleton placeholder (minimal-subset compatible file content)
+// This file is a placeholder for future IR data structures and passes.
+
+fn ir_version() -> i32 {
+  return 1;
+}
