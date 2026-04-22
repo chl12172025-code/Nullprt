@@ -1,0 +1,112 @@
+name: release-alpha
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Release tag"
+        required: true
+        default: "v0.1.0-alpha"
+  push:
+    tags:
+      - "v*-alpha*"
+
+jobs:
+  build:
+    name: build-${{ matrix.os }}-${{ matrix.arch }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: windows-latest
+            arch: x86_64
+            suffix: win-x64
+          - os: windows-latest
+            arch: arm64
+            suffix: win-arm64
+          - os: ubuntu-latest
+            arch: x86_64
+            suffix: linux-x64
+          - os: ubuntu-latest
+            arch: arm64
+            suffix: linux-arm64
+          - os: macos-latest
+            arch: x86_64
+            suffix: macos-x64
+          - os: macos-latest
+            arch: arm64
+            suffix: macos-arm64
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Prepare package directory
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force -Path dist | Out-Null
+          Copy-Item README.md dist/README.md
+          if (Test-Path scripts) { Copy-Item scripts dist/scripts -Recurse -Force }
+          if (Test-Path spec) { Copy-Item spec dist/spec -Recurse -Force }
+          if (Test-Path src) { Copy-Item src dist/src -Recurse -Force }
+
+      - name: Archive package
+        shell: pwsh
+        run: |
+          $out = "nullprt-${{ matrix.suffix }}.zip"
+          Compress-Archive -Path dist/* -DestinationPath $out -Force
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-${{ matrix.suffix }}
+          path: nullprt-${{ matrix.suffix }}.zip
+
+  publish:
+    name: publish-release
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Resolve tag
+        id: tag
+        shell: bash
+        run: |
+          if [ -n "${{ github.event.inputs.tag }}" ]; then
+            echo "value=${{ github.event.inputs.tag }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "value=${GITHUB_REF_NAME}" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: Prepare release notes
+        shell: bash
+        run: |
+          cat > RELEASE_NOTES.md <<'EOF'
+          v0.1.0-alpha
+
+          - Platform matrix: Windows/Linux/macOS x86_64 + arm64
+          - Includes compiler sources, scripts, and spec assets
+          - Known limitations:
+            - Native backend object writers are still minimal stubs
+            - Full relocation completeness is pending
+
+          Quick start:
+          - Run CI workflows and verification scripts from scripts/
+          EOF
+
+      - name: Publish release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.tag.outputs.value }}
+          name: ${{ steps.tag.outputs.value }}
+          body_path: RELEASE_NOTES.md
+          files: |
+            artifacts/**/*.zip

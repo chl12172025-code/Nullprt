@@ -1,4 +1,5 @@
 #include "nprt_pkg.h"
+#include "resolver.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -13,6 +14,7 @@ static void usage(void) {
   fprintf(stderr, "usage:\n");
   fprintf(stderr, "  nprt-pkg ping <base_url>\n");
   fprintf(stderr, "  nprt-pkg get <url> <expected_sha256_hex>\n");
+  fprintf(stderr, "  nprt-pkg resolve <deps.txt> <deps.lock.npkg>\n");
 }
 
 int main(int argc, char** argv) {
@@ -56,6 +58,28 @@ int main(int argc, char** argv) {
     }
     printf("ok cas=%s\n", cas_path);
     npkg_http_free(&r);
+    return 0;
+  }
+
+  if (!strcmp(argv[1], "resolve")) {
+    if (argc < 4) { usage(); return 2; }
+    NpkgDepGraph g;
+    if (!npkg_parse_deps_file(argv[2], &g)) {
+      fprintf(stderr, "nprt-pkg: failed to parse deps file\n");
+      return 1;
+    }
+    if (g.has_conflict) {
+      fprintf(stderr, "nprt-pkg: dependency conflicts detected\n");
+      npkg_free_dep_graph(&g);
+      return 1;
+    }
+    if (!npkg_write_lockfile(argv[3], &g)) {
+      fprintf(stderr, "nprt-pkg: failed to write lockfile\n");
+      npkg_free_dep_graph(&g);
+      return 1;
+    }
+    printf("ok lockfile=%s deps=%zu\n", argv[3], g.len);
+    npkg_free_dep_graph(&g);
     return 0;
   }
 

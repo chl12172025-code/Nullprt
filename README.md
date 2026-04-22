@@ -1,3 +1,5 @@
+[![CI](https://github.com/chl12172025-code/Nullprt/actions/workflows/nullprt-ci.yml/badge.svg)](https://github.com/chl12172025-code/Nullprt/actions/workflows/nullprt-ci.yml)
+
 ## Nullprt（NPRT）支持仓库
 
 本仓库当前包含 **规格文档 + MVP 工程路线图支撑材料**（尚未实现编译器/工具链代码）。

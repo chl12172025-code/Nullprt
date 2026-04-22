@@ -73,3 +73,15 @@ NprtResultFile nprt_sys_open(const char* path_utf8, uint32_t mode_flags);
 NprtResultSize nprt_sys_read(NprtFile f, void* buf, size_t cap);
 NprtResultSize nprt_sys_write(NprtFile f, const void* buf, size_t len);
 NprtResultVoid nprt_sys_close(NprtFile f);
+
+// ---------------- std support helpers ----------------
+typedef struct NprtResultPathList {
+  bool ok;
+  char** items;
+  size_t len;
+  NprtSysError err;
+} NprtResultPathList;
+
+// Returns directory entries (UTF-8 path strings). Caller frees via nprt_std_free_path_list.
+NprtResultPathList nprt_std_list_dir_simple(const char* path_utf8);
+void nprt_std_free_path_list(NprtResultPathList* list);

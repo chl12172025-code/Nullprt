@@ -8,6 +8,10 @@ static bool write_coff(FILE* f, const A1MachineModule* mm) {
   fwrite("COFF", 1, 4, f);
   uint32_t n = (uint32_t)mm->len;
   fwrite(&n, 1, 4, f);
+  for (uint32_t i = 0; i < n; i++) {
+    fwrite(&mm->fns[i].stack_size, 1, 4, f);
+    fwrite(&mm->fns[i].insn_count, 1, 4, f);
+  }
   return true;
 }
 
@@ -17,6 +21,10 @@ static bool write_elf(FILE* f, const A1MachineModule* mm) {
   fwrite(ehdr, 1, 16, f);
   uint32_t n = (uint32_t)mm->len;
   fwrite(&n, 1, 4, f);
+  for (uint32_t i = 0; i < n; i++) {
+    fwrite(&mm->fns[i].stack_size, 1, 4, f);
+    fwrite(&mm->fns[i].insn_count, 1, 4, f);
+  }
   return true;
 }
 
@@ -26,6 +34,10 @@ static bool write_macho(FILE* f, const A1MachineModule* mm) {
   fwrite(&magic, 1, 4, f);
   uint32_t n = (uint32_t)mm->len;
   fwrite(&n, 1, 4, f);
+  for (uint32_t i = 0; i < n; i++) {
+    fwrite(&mm->fns[i].stack_size, 1, 4, f);
+    fwrite(&mm->fns[i].insn_count, 1, 4, f);
+  }
   return true;
 }
 
