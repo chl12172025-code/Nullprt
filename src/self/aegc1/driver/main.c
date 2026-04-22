@@ -43,6 +43,8 @@ int main(int argc, char** argv) {
   const char* link_out = NULL;
   bool c_debug_comments = false;
   bool protect_off = false;
+  const char* opt_level = "O2";
+  bool emit_diag_json = false;
   const char* target = "win";
   const char* research_purpose = NULL;
 
@@ -54,6 +56,8 @@ int main(int argc, char** argv) {
     if (!strcmp(argv[i], "--link-out") && i + 1 < argc) { link_out = argv[++i]; continue; }
     if (!strcmp(argv[i], "--emit-c-debug-comments")) { c_debug_comments = true; continue; }
     if (!strcmp(argv[i], "--no-protect")) { protect_off = true; continue; }
+    if (!strcmp(argv[i], "--opt") && i + 1 < argc) { opt_level = argv[++i]; continue; }
+    if (!strcmp(argv[i], "--diag-json")) { emit_diag_json = true; continue; }
     if (!strcmp(argv[i], "--target") && i + 1 < argc) { target = argv[++i]; continue; }
     if (!strcmp(argv[i], "--research-purpose") && i + 1 < argc) { research_purpose = argv[++i]; continue; }
   }
@@ -70,6 +74,9 @@ int main(int argc, char** argv) {
       return 1;
     }
     nprt_research_log_event("aegc1.main", research_purpose);
+  }
+  if (emit_diag_json) {
+    fprintf(stderr, "{\"tool\":\"aegc1\",\"target\":\"%s\",\"opt\":\"%s\"}\n", target, opt_level);
   }
 
   size_t len = 0;

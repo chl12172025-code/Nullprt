@@ -10,6 +10,7 @@ void a1_protect_options_default(A1ProtectOptions* opt) {
   opt->string_obfuscation = true;
   opt->integrity_hash = true;
   opt->antidebug = true;
+  opt->optimization_profile = "O2";
 }
 
 bool a1_ir_apply_protection_passes(A1IrModule* ir, const A1ProtectOptions* opt) {

@@ -9,6 +9,7 @@ typedef struct A1ProtectOptions {
   bool string_obfuscation;
   bool integrity_hash;
   bool antidebug;
+  const char* optimization_profile;
 } A1ProtectOptions;
 
 void a1_protect_options_default(A1ProtectOptions* opt);
