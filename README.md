@@ -33,3 +33,9 @@
 - Linux：`gcc` 或 `clang`（通过发行版包管理器安装）
 
 上述外部编译器依赖仅在 Stage0 bootstrap 阶段需要；最终 Nullprt 发行包不依赖任何外部编译器。
+
+## 安装
+
+### 下载预编译二进制
+
+从 [Releases](https://github.com/chl12172025-code/Nullprt/releases) 页面下载对应平台的压缩包，解压后将 `bin/` 目录添加到 `PATH`。
