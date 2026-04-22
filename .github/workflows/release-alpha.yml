@@ -11,6 +11,9 @@ on:
     tags:
       - "v*-alpha*"
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
+
 jobs:
   build:
     name: build-${{ matrix.os }}-${{ matrix.arch }}

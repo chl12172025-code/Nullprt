@@ -7,6 +7,9 @@ on:
     branches: [main, master, develop]
   workflow_dispatch:
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
+
 jobs:
   verify:
     name: verify-${{ matrix.os }}
@@ -27,46 +30,82 @@ jobs:
 
       - name: Detect toolchain
         id: detect
-        continue-on-error: true
         shell: pwsh
         run: |
           pwsh -File scripts/detect_toolchain.ps1
+          $code = $LASTEXITCODE
+          "exit_code=$code" >> $env:GITHUB_OUTPUT
+          if ($code -ne 0) { Write-Host "::warning::Toolchain detection failed (exit=$code), workflow continues for diagnostics." }
+          exit 0
 
       - name: Bootstrap verify (all OS)
         id: bootstrap
-        continue-on-error: true
         shell: pwsh
         run: |
           pwsh -ExecutionPolicy Bypass -File scripts/bootstrap_verify.ps1
+          $code = $LASTEXITCODE
+          "exit_code=$code" >> $env:GITHUB_OUTPUT
+          if ($code -ne 0) { Write-Host "::warning::Bootstrap verification failed (exit=$code), captured as expected diagnostic in some environments." }
+          exit 0
 
       - name: Cross compile test (all OS)
         id: cross
-        continue-on-error: true
         shell: pwsh
         run: |
           pwsh -ExecutionPolicy Bypass -File scripts/cross_compile_test.ps1
+          $code = $LASTEXITCODE
+          "exit_code=$code" >> $env:GITHUB_OUTPUT
+          if ($code -ne 0) { Write-Host "::warning::Cross compile test failed (exit=$code), captured for follow-up." }
+          exit 0
 
       - name: aegc1 selfhost verify (all OS)
         id: selfhost
-        continue-on-error: true
         shell: pwsh
         run: |
           pwsh -ExecutionPolicy Bypass -File scripts/aegc1_selfhost_verify.ps1
+          $code = $LASTEXITCODE
+          "exit_code=$code" >> $env:GITHUB_OUTPUT
+          if ($code -ne 0) { Write-Host "::warning::aegc1 selfhost verify failed (exit=$code), captured for follow-up." }
+          exit 0
 
       - name: Selfhost readiness and test assets (all OS)
         id: smoke
-        continue-on-error: true
         shell: pwsh
         run: |
           pwsh -File scripts/selfhost_readiness_report.ps1
+          $a = $LASTEXITCODE
           pwsh -File tests/aegc1/run_tests.ps1
+          $b = $LASTEXITCODE
+          $code = if ($a -ne 0) { $a } else { $b }
+          "exit_code=$code" >> $env:GITHUB_OUTPUT
+          if ($code -ne 0) { Write-Host "::warning::Smoke/report step failed (exit=$code)." }
+          exit 0
 
       - name: Run tests asset report (all OS)
         id: tests
-        continue-on-error: true
         shell: pwsh
         run: |
           pwsh -File tests/aegc1/run_tests.ps1
+          $code = $LASTEXITCODE
+          "exit_code=$code" >> $env:GITHUB_OUTPUT
+          if ($code -ne 0) { Write-Host "::warning::Tests asset report failed (exit=$code)." }
+          exit 0
+
+      - name: Enforce required step outcomes
+        if: success() || failure()
+        shell: pwsh
+        run: |
+          $smoke = "${{ steps.smoke.outputs.exit_code }}"
+          $tests = "${{ steps.tests.outputs.exit_code }}"
+          if ($smoke -ne "0") {
+            Write-Error "Required smoke step failed (exit=$smoke)."
+            exit 1
+          }
+          if ($tests -ne "0") {
+            Write-Error "Required tests step failed (exit=$tests)."
+            exit 1
+          }
+          Write-Host "Required checks passed. Diagnostic steps may still emit warnings."
 
       - name: Upload scripts reports
         if: always()
@@ -85,7 +124,7 @@ jobs:
           name: build-${{ matrix.os }}
           path: |
             build/**
-          if-no-files-found: warn
+          if-no-files-found: ignore
 
       - name: Job summary
         if: always()
@@ -110,3 +149,23 @@ jobs:
           Add-Report "scripts/aegc1_selfhost_report.txt" "aegc1_selfhost_report.txt"
           Add-Report "scripts/selfhost_readiness_report.txt" "selfhost_readiness_report.txt"
           Add-Report "tests/aegc1/test_report.txt" "tests/aegc1/test_report.txt"
+          Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value "### Step outcomes"
+          Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value "- detect: ${{ steps.detect.outputs.exit_code }}"
+          Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value "- bootstrap: ${{ steps.bootstrap.outputs.exit_code }}"
+          Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value "- cross: ${{ steps.cross.outputs.exit_code }}"
+          Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value "- selfhost: ${{ steps.selfhost.outputs.exit_code }}"
+          Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value "- smoke(required): ${{ steps.smoke.outputs.exit_code }}"
+          Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value "- tests(required): ${{ steps.tests.outputs.exit_code }}"
+
+  summary:
+    needs: [verify]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Aggregate workflow status
+        run: |
+          echo "verify: ${{ needs.verify.result }}"
+          if [[ "${{ needs.verify.result }}" != "success" ]]; then
+            echo "Required verify job failed."
+            exit 1
+          fi
