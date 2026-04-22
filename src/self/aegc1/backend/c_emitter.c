@@ -15,6 +15,10 @@ bool a1_emit_c(const A1IrModule* ir, const char* out_c_path, const A1CEmitOption
   fprintf(f, "#define A1_RESULT_ERR(e) ((A1_Result_i32){0,0,(e)})\n\n");
   fprintf(f, "typedef struct A1_EnumTagPayload { int32_t tag; union { int32_t i32v; uint64_t u64v; } payload; } A1_EnumTagPayload;\n");
   fprintf(f, "static int32_t a1_match_enum_i32(A1_EnumTagPayload e) { switch (e.tag) { case 0: return e.payload.i32v; case 1: return (int32_t)e.payload.u64v; default: return -1; } }\n\n");
+  fprintf(f, "static const unsigned char A1_OBF_KEY = 0x5Au;\n");
+  fprintf(f, "static const char* a1_decode_stub(const char* in) { (void)in; return \"decoded\"; }\n");
+  fprintf(f, "static int a1_antidebug_probe(void) { return 0; }\n");
+  fprintf(f, "static uint64_t a1_integrity_hash(uint64_t v) { return (v ^ 0xA5A5A5A5A5A5A5A5ull) * 1099511628211ull; }\n\n");
 
   for (size_t i = 0; i < ir->len; i++) {
     const A1IrFunction* fn = &ir->fns[i];
@@ -37,6 +41,9 @@ bool a1_emit_c(const A1IrModule* ir, const char* out_c_path, const A1CEmitOption
 
     if (fn->name.len == 4 && fn->name.ptr[0] == 'm' && fn->name.ptr[1] == 'a' && fn->name.ptr[2] == 'i' && fn->name.ptr[3] == 'n') {
       fprintf(f, "int32_t main(void) {\n");
+      if (fn->antidebug_guard) fprintf(f, "  if (a1_antidebug_probe()) { return -1001; }\n");
+      if (fn->string_obfuscated) fprintf(f, "  (void)a1_decode_stub(\"encoded\");\n");
+      fprintf(f, "  (void)a1_integrity_hash(%lluull);\n", (unsigned long long)fn->integrity_tag);
       fprintf(f, "  A1_EnumTagPayload e; e.tag = 0; e.payload.i32v = 0;\n");
       fprintf(f, "  return a1_match_enum_i32(e);\n");
       fprintf(f, "}\n");

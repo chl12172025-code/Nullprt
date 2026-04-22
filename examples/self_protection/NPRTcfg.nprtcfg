@@ -1,0 +1,6 @@
+nprtcfg 0.1.0;
+
+project.name = "self_protection";
+project.version = "0.2.0-beta";
+build.profile = "release";
+build.obfuscate = true;

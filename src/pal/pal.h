@@ -37,6 +37,12 @@ typedef struct NprtResultI32 {
   NprtSysError err;
 } NprtResultI32;
 
+typedef struct NprtResultBool {
+  bool ok;
+  bool value;
+  NprtSysError err;
+} NprtResultBool;
+
 // ---------------- process ----------------
 NprtResultVoid nprt_sys_exit(int32_t code);
 
@@ -85,3 +91,61 @@ typedef struct NprtResultPathList {
 // Returns directory entries (UTF-8 path strings). Caller frees via nprt_std_free_path_list.
 NprtResultPathList nprt_std_list_dir_simple(const char* path_utf8);
 void nprt_std_free_path_list(NprtResultPathList* list);
+
+// ---------------- security / hardware identity ----------------
+typedef struct NprtHardwareIdentity {
+  char disk_serial[128];
+  char mac_address[64];
+  char board_uuid[128];
+  char bios_uuid[128];
+  char tpm_id[128];
+  char device_fingerprint[128];
+} NprtHardwareIdentity;
+
+typedef struct NprtResultHardwareIdentity {
+  bool ok;
+  NprtHardwareIdentity value;
+  NprtSysError err;
+} NprtResultHardwareIdentity;
+
+// Read-only collection from public OS APIs/files.
+NprtResultHardwareIdentity nprt_sec_read_hardware_identity(void);
+
+// For developer/research use, this only overlays process-visible values.
+NprtResultHardwareIdentity nprt_sec_read_hardware_identity_overlay(void);
+
+// License binding helper using a stable normalized fingerprint.
+NprtResultBool nprt_sec_verify_license_binding(const char* expected_fingerprint_utf8);
+
+typedef struct NprtVmSignals {
+  bool cpuid_hypervisor;
+  bool file_registry_traits;
+  bool device_driver_traits;
+  bool timing_anomaly;
+} NprtVmSignals;
+
+typedef struct NprtResultVmSignals {
+  bool ok;
+  NprtVmSignals value;
+  NprtSysError err;
+} NprtResultVmSignals;
+
+NprtResultVmSignals nprt_sec_detect_vm_signals(void);
+
+typedef struct NprtMemAccessRequest {
+  uint32_t target_pid;
+  uintptr_t address;
+  size_t size;
+  void* buffer;
+  const char* authorization_token;
+} NprtMemAccessRequest;
+
+// WARNING: This API is for authorized security research and compatibility
+// testing only. Do not use for attacking third-party systems or bypassing
+// license validation.
+NprtResultSize nprt_sec_read_process_memory(const NprtMemAccessRequest* req);
+
+// WARNING: This API is for authorized security research and compatibility
+// testing only. Do not use for attacking third-party systems or bypassing
+// license validation.
+NprtResultSize nprt_sec_write_process_memory(const NprtMemAccessRequest* req);

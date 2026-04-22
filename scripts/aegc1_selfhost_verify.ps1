@@ -39,10 +39,12 @@ $cFiles = @(
   "semantic/monomorphize.c",
   "ir/nprt_ir.c",
   "ir/dump.c",
+  "ir/protect_passes.c",
   "backend/c_emitter.c",
   "backend/native/x86_64/lowering.c",
   "backend/native/x86_64/obj_writer.c",
   "backend/native/x86_64/codegen.c",
+  "runtime/dev_gate.c",
   "driver/main.c"
 ) | ForEach-Object { Join-Path $srcBase $_ }
 

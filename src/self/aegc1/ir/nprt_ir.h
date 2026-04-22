@@ -9,6 +9,11 @@ typedef struct A1IrFunction {
   bool is_result_like;
   bool cfg_enabled;
   uint32_t basic_blocks;
+  bool flattened_cfg;
+  bool opaque_predicate;
+  bool string_obfuscated;
+  bool antidebug_guard;
+  uint64_t integrity_tag;
 } A1IrFunction;
 
 typedef struct A1IrModule {

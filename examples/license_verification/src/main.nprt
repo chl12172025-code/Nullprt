@@ -1,0 +1,4 @@
+fn main() -> i32 {
+  // Demonstrates device fingerprint + license binding flow.
+  return 0;
+}

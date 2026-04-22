@@ -4,8 +4,10 @@
 #include "../semantic/monomorphize.h"
 #include "../ir/nprt_ir.h"
 #include "../ir/dump.h"
+#include "../ir/protect_passes.h"
 #include "../backend/c_emitter.h"
 #include "../backend/native/x86_64/codegen.h"
+#include "../runtime/dev_gate.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -40,7 +42,9 @@ int main(int argc, char** argv) {
   const char* out_ir = NULL;
   const char* link_out = NULL;
   bool c_debug_comments = false;
+  bool protect_off = false;
   const char* target = "win";
+  const char* research_purpose = NULL;
 
   for (int i = 1; i < argc; i++) {
     if (!strcmp(argv[i], "-i") && i + 1 < argc) { in = argv[++i]; continue; }
@@ -49,12 +53,23 @@ int main(int argc, char** argv) {
     if (!strcmp(argv[i], "--dump-ir") && i + 1 < argc) { out_ir = argv[++i]; continue; }
     if (!strcmp(argv[i], "--link-out") && i + 1 < argc) { link_out = argv[++i]; continue; }
     if (!strcmp(argv[i], "--emit-c-debug-comments")) { c_debug_comments = true; continue; }
+    if (!strcmp(argv[i], "--no-protect")) { protect_off = true; continue; }
     if (!strcmp(argv[i], "--target") && i + 1 < argc) { target = argv[++i]; continue; }
+    if (!strcmp(argv[i], "--research-purpose") && i + 1 < argc) { research_purpose = argv[++i]; continue; }
   }
 
   if (!in || (!out_c && !out_obj)) {
     usage();
     return 2;
+  }
+
+  if (research_purpose) {
+    NprtResearchToken tok = nprt_authorize_research(research_purpose);
+    if (!nprt_research_token_is_valid(&tok)) {
+      fprintf(stderr, "aegc1: research gate rejected purpose=%s\n", research_purpose);
+      return 1;
+    }
+    nprt_research_log_event("aegc1.main", research_purpose);
   }
 
   size_t len = 0;
@@ -95,6 +110,10 @@ int main(int argc, char** argv) {
   }
 
   A1IrModule ir = a1_ir_lower(&ast);
+  A1ProtectOptions popt;
+  a1_protect_options_default(&popt);
+  if (protect_off) popt.enable = false;
+  (void)a1_ir_apply_protection_passes(&ir, &popt);
   if (!a1_ir_validate(&ir)) {
     fprintf(stderr, "aegc1: IR validation failed\n");
     a1_ir_free(&ir);

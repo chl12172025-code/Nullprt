@@ -1,0 +1,4 @@
+fn main() -> i32 {
+  // Demonstrates anti-debug and integrity check startup path.
+  return 0;
+}

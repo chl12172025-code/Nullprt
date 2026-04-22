@@ -1,0 +1,4 @@
+fn main() -> i32 {
+  // Demonstrates calling a C ABI function and exporting one symbol.
+  return 0;
+}

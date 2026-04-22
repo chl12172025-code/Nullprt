@@ -3,27 +3,21 @@ CI passes with expected diagnostics in early-stage bootstrap environments.
 
 ## Nullprt（NPRT）支持仓库
 
-本仓库当前包含 **规格文档 + MVP 工程路线图支撑材料**（尚未实现编译器/工具链代码）。
+当前版本目标：`0.2.0-beta`。
 
-### 入口
-- 规格文档：`docs/`\n
-  - `docs/00-overview.md`\n
-  - `docs/10-language.md`\n
-  - `docs/20-abi-ffi.md`\n
-  - `docs/30-config-format.md`\n
-  - `docs/40-toolchain.md`\n
-  - `docs/50-runtime-stdlib.md`\n
-  - `docs/60-security-release.md`\n
-- 工程化规格（便于实现）：`spec/`\n
-  - 配置键空间与示例：`spec/config/`\n
-  - `aegc` MVP：`spec/aegc/mvp-compiler.md`\n
-  - `npkg` 协议与锁文件：`spec/npkg/`\n
-  - LSP MVP：`spec/lsp/mvp.md`\n
-  - 运行时/标准库模块地图与 PAL：`spec/runtime/`\n
-  - 发行版保护流水线：`spec/security/`\n
-  - 自举策略：`spec/bootstrap-strategy.md`\n
-- ABI 测试集：`tests/abi/`\n
-- 示例项目：`examples/hello_nprt/`\n
+### 文档入口
+- 文档站点主页：`docs/index.html`
+- API 参考（HTML）：`site/api/index.html`（由 `scripts/generate_api_docs.ps1` 生成）
+- 教程目录：`docs/tutorials/`
+- 工程规格：`spec/`
+
+### 示例项目
+- `examples/hello_nprt/`
+- `examples/http_server/`
+- `examples/license_verification/`
+- `examples/self_protection/`
+- `examples/c_interop/`
+- `examples/security_research_tool/`（仅开发者版本）
 
 ### Stage0 开发环境依赖
 - Windows：需安装以下任一 C 工具链（Stage0 自举使用）  
@@ -39,4 +33,9 @@ CI passes with expected diagnostics in early-stage bootstrap environments.
 
 ### 下载预编译二进制
 
-从 [Releases](https://github.com/chl12172025-code/Nullprt/releases) 页面下载对应平台的压缩包，解压后将 `bin/` 目录添加到 `PATH`。
+从 [Releases](https://github.com/chl12172025-code/Nullprt/releases) 页面下载 `v0.2.0-beta` 对应平台压缩包（Windows/Linux/macOS x x86_64/arm64），解压后将 `bin/` 目录加入 `PATH`。
+
+## 道德与法律合规
+
+安全研究相关能力（硬件标识模拟、VM 行为模拟、跨进程内存操作）仅限授权的安全研究和兼容性测试。  
+默认发行构建必须关闭开发者研究能力，不得用于攻击第三方系统或绕过许可验证。

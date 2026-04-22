@@ -1,0 +1,6 @@
+nprtcfg 0.1.0;
+
+project.name = "http_server";
+project.version = "0.2.0-beta";
+build.profile = "dev";
+build.targets = ["x86_64-windows-msvc", "x86_64-linux-gnu", "x86_64-macos-clang"];

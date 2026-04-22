@@ -69,7 +69,7 @@ int main(int argc, char** argv) {
       return 1;
     }
     if (g.has_conflict) {
-      fprintf(stderr, "nprt-pkg: dependency conflicts detected\n");
+      fprintf(stderr, "nprt-pkg: dependency conflicts detected: %s\n", g.conflict_message);
       npkg_free_dep_graph(&g);
       return 1;
     }

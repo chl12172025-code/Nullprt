@@ -1,0 +1,4 @@
+fn main() -> i32 {
+  // Placeholder HTTP server skeleton for std::net APIs.
+  return 0;
+}

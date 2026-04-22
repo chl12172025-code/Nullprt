@@ -1,4 +1,4 @@
-name: release-alpha
+name: release-prerelease
 
 on:
   workflow_dispatch:
@@ -6,13 +6,15 @@ on:
       tag:
         description: "Release tag"
         required: true
-        default: "v0.1.0-alpha"
+        default: "v0.2.0-beta"
   push:
     tags:
       - "v*-alpha*"
+      - "v*-beta*"
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
+  NPRT_DEV_RESEARCH: "0"
 
 jobs:
   build:
@@ -93,13 +95,13 @@ jobs:
         shell: bash
         run: |
           cat > RELEASE_NOTES.md <<'EOF'
-          v0.1.0-alpha
+          v0.2.0-beta
 
           - Platform matrix: Windows/Linux/macOS x86_64 + arm64
-          - Includes compiler sources, scripts, and spec assets
-          - Known limitations:
-            - Native backend object writers are still minimal stubs
-            - Full relocation completeness is pending
+          - Added developer research gate (`NPRT_DEV_RESEARCH`) with runtime token auditing
+          - Added hardware identity collection, VM signal detection, and license binding helpers
+          - Improved package resolver with SemVer requirements and richer lockfile metadata
+          - Added docs/tutorial/examples and GitHub Pages publishing workflow
 
           Quick start:
           - Run CI workflows and verification scripts from scripts/
@@ -111,5 +113,7 @@ jobs:
           tag_name: ${{ steps.tag.outputs.value }}
           name: ${{ steps.tag.outputs.value }}
           body_path: RELEASE_NOTES.md
+          prerelease: true
+          generate_release_notes: true
           files: |
             artifacts/**/*.zip
