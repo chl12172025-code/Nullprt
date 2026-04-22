@@ -7,9 +7,20 @@ CI passes with expected diagnostics in early-stage bootstrap environments.
 
 ### 文档入口
 - 文档站点主页：`docs/index.html`
+- GitHub Pages：`https://chl12172025-code.github.io/Nullprt/`
 - API 参考（HTML）：`site/api/index.html`（由 `scripts/generate_api_docs.ps1` 生成）
 - 教程目录：`docs/tutorials/`
 - 工程规格：`spec/`
+
+### 工具链列表
+- `aegc1`：Nullprt 编译器驱动
+- `nprt-pkg`：包管理器
+- `nprt-lsp`：语言服务器（LSP 3.17）
+- `nprt-debug`：开发者版调试器（DAP 集成入口）
+- `nprt-prof`：开发者版性能分析器
+- `nprt-doc`：API 文档生成器
+- `nprt-fmt`：代码格式化工具
+- `scripts/generate_api_docs.ps1`：文档生成脚本
 
 ### 示例项目
 - `examples/hello_nprt/`

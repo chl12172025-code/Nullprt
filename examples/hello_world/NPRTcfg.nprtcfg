@@ -1,0 +1,4 @@
+nprtcfg 0.1.0;
+project.name = "hello_world";
+project.version = "0.2.0-beta";
+build.profile = "dev";
