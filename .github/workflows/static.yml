@@ -35,7 +35,7 @@ jobs:
           cp README.md _site/ 2>/dev/null || true
           mkdir -p _site/examples
           cp -r examples/* _site/examples/ 2>/dev/null || true
-          echo "<html><head><meta http-equiv='refresh' content='0;url=docs/index.html'></head></html>" > _site/index.html
+          echo '<html><head><meta http-equiv="refresh" content="0;url=docs/index.html"></head></html>' > _site/index.html
       
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
