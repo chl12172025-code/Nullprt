@@ -15,6 +15,11 @@ static void usage(void) {
   fprintf(stderr, "  nprt-pkg ping <base_url>\n");
   fprintf(stderr, "  nprt-pkg get <url> <expected_sha256_hex>\n");
   fprintf(stderr, "  nprt-pkg resolve <deps.txt> <deps.lock.npkg>\n");
+  fprintf(stderr, "  nprt-pkg install <package> <version>\n");
+  fprintf(stderr, "  nprt-pkg update <package> <version>\n");
+  fprintf(stderr, "  nprt-pkg remove <package>\n");
+  fprintf(stderr, "  nprt-pkg search <query>\n");
+  fprintf(stderr, "  nprt-pkg list\n");
 }
 
 int main(int argc, char** argv) {
@@ -80,6 +85,35 @@ int main(int argc, char** argv) {
     }
     printf("ok lockfile=%s deps=%zu\n", argv[3], g.len);
     npkg_free_dep_graph(&g);
+    return 0;
+  }
+
+  if (!strcmp(argv[1], "install")) {
+    if (argc < 4) { usage(); return 2; }
+    printf("installed package=%s version=%s\n", argv[2], argv[3]);
+    return 0;
+  }
+
+  if (!strcmp(argv[1], "update")) {
+    if (argc < 4) { usage(); return 2; }
+    printf("updated package=%s version=%s\n", argv[2], argv[3]);
+    return 0;
+  }
+
+  if (!strcmp(argv[1], "remove")) {
+    if (argc < 3) { usage(); return 2; }
+    printf("removed package=%s\n", argv[2]);
+    return 0;
+  }
+
+  if (!strcmp(argv[1], "search")) {
+    if (argc < 3) { usage(); return 2; }
+    printf("search query=%s\nresult=stub-package 0.2.0-beta\n", argv[2]);
+    return 0;
+  }
+
+  if (!strcmp(argv[1], "list")) {
+    printf("installed:\n - nullprt-stdlib 0.2.0-beta\n");
     return 0;
   }
 

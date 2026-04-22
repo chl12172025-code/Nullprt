@@ -103,14 +103,37 @@ static int json_find_int_value(const char* json, const char* key, int defv) {
 }
 
 static void send_initialize_result(int id) {
-  char buf[2048];
+  char buf[4096];
   snprintf(
       buf, sizeof(buf),
-      "{\"jsonrpc\":\"2.0\",\"id\":%d,\"result\":{\"capabilities\":{\"textDocumentSync\":1,"
-      "\"definitionProvider\":true,\"referencesProvider\":true,\"documentSymbolProvider\":true,"
-      "\"completionProvider\":{\"resolveProvider\":false}}}}",
+      "{\"jsonrpc\":\"2.0\",\"id\":%d,\"result\":{\"capabilities\":{"
+      "\"textDocumentSync\":2,"
+      "\"definitionProvider\":true,"
+      "\"typeDefinitionProvider\":true,"
+      "\"implementationProvider\":true,"
+      "\"referencesProvider\":true,"
+      "\"documentSymbolProvider\":true,"
+      "\"workspaceSymbolProvider\":true,"
+      "\"hoverProvider\":true,"
+      "\"signatureHelpProvider\":{\"triggerCharacters\":[\"(\",\",\"]},"
+      "\"renameProvider\":{\"prepareProvider\":true},"
+      "\"foldingRangeProvider\":true,"
+      "\"selectionRangeProvider\":true,"
+      "\"semanticTokensProvider\":{\"full\":true,\"legend\":{\"tokenTypes\":[\"class\",\"function\",\"variable\"],\"tokenModifiers\":[\"declaration\",\"readonly\"]}},"
+      "\"inlayHintProvider\":true,"
+      "\"codeActionProvider\":true,"
+      "\"completionProvider\":{\"resolveProvider\":false,\"triggerCharacters\":[\".\",\":\"]},"
+      "\"documentFormattingProvider\":true,"
+      "\"documentRangeFormattingProvider\":true"
+      "}}}",
       id);
   write_lsp_message(buf);
+}
+
+static void send_empty_result(int id, const char* json_value) {
+  char out[256];
+  snprintf(out, sizeof(out), "{\"jsonrpc\":\"2.0\",\"id\":%d,\"result\":%s}", id, json_value);
+  write_lsp_message(out);
 }
 
 static void send_publish_diagnostics(const char* uri, const char* message, int line0, int col0) {
@@ -196,17 +219,39 @@ int main(void) {
       free(body);
       break;
     } else if (method && strcmp(method, "textDocument/definition") == 0) {
-      char out[128];
-      snprintf(out, sizeof(out), "{\"jsonrpc\":\"2.0\",\"id\":%d,\"result\":null}", id);
-      write_lsp_message(out);
+      send_empty_result(id, "null");
+    } else if (method && strcmp(method, "textDocument/typeDefinition") == 0) {
+      send_empty_result(id, "null");
+    } else if (method && strcmp(method, "textDocument/implementation") == 0) {
+      send_empty_result(id, "[]");
     } else if (method && strcmp(method, "textDocument/references") == 0) {
-      char out[128];
-      snprintf(out, sizeof(out), "{\"jsonrpc\":\"2.0\",\"id\":%d,\"result\":[]}", id);
-      write_lsp_message(out);
+      send_empty_result(id, "[]");
     } else if (method && strcmp(method, "textDocument/documentSymbol") == 0) {
-      char out[128];
-      snprintf(out, sizeof(out), "{\"jsonrpc\":\"2.0\",\"id\":%d,\"result\":[]}", id);
-      write_lsp_message(out);
+      send_empty_result(id, "[]");
+    } else if (method && strcmp(method, "workspace/symbol") == 0) {
+      send_empty_result(id, "[]");
+    } else if (method && strcmp(method, "textDocument/hover") == 0) {
+      send_empty_result(id, "null");
+    } else if (method && strcmp(method, "textDocument/semanticTokens/full") == 0) {
+      send_empty_result(id, "{\"data\":[]}");
+    } else if (method && strcmp(method, "textDocument/inlayHint") == 0) {
+      send_empty_result(id, "[]");
+    } else if (method && strcmp(method, "textDocument/codeAction") == 0) {
+      send_empty_result(id, "[]");
+    } else if (method && strcmp(method, "textDocument/formatting") == 0) {
+      send_empty_result(id, "[]");
+    } else if (method && strcmp(method, "textDocument/rangeFormatting") == 0) {
+      send_empty_result(id, "[]");
+    } else if (method && strcmp(method, "textDocument/rename") == 0) {
+      send_empty_result(id, "null");
+    } else if (method && strcmp(method, "textDocument/prepareRename") == 0) {
+      send_empty_result(id, "null");
+    } else if (method && strcmp(method, "textDocument/foldingRange") == 0) {
+      send_empty_result(id, "[]");
+    } else if (method && strcmp(method, "textDocument/selectionRange") == 0) {
+      send_empty_result(id, "[]");
+    } else if (method && strcmp(method, "textDocument/signatureHelp") == 0) {
+      send_empty_result(id, "null");
     } else if (method && strcmp(method, "textDocument/completion") == 0) {
       char out[128];
       snprintf(out, sizeof(out), "{\"jsonrpc\":\"2.0\",\"id\":%d,\"result\":{\"isIncomplete\":false,\"items\":[]}}", id);
