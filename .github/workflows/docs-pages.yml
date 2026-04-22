@@ -23,6 +23,7 @@ jobs:
         shell: pwsh
         run: |
           New-Item -ItemType Directory -Force -Path site | Out-Null
+          New-Item -ItemType Directory -Force -Path site/examples | Out-Null
           Copy-Item docs/* site/ -Recurse -Force
           if (Test-Path examples) { Copy-Item examples/* site/examples/ -Recurse -Force }
           Copy-Item docs/index.html site/index.html -Force
