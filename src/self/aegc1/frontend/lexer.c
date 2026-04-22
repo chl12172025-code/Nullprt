@@ -20,6 +20,22 @@ static bool sv_eq(A1StringView a, const char* lit) {
   return memcmp(a.ptr, lit, n) == 0;
 }
 
+bool a1_is_reserved_keyword(A1StringView sv) {
+  static const char* kws[] = {
+    "fn","let","mut","const","static","type","struct","enum","union","trait","impl",
+    "mod","use","import","export","extern","as","where","pub","crate","super","self",
+    "if","else","unless","when","cond","switch","match","loop","while","for","in",
+    "break","continue","return","yield","await","try","catch","finally","defer","throw",
+    "panic","recover","async","channel","send","recv","select","atomic","fence",
+    "unsafe","derive","macro","macro_rules","cfg","cfg_attr","test","bench","doc",
+    "reflect","meta","comptime","effect","generic","associated","exists","linear","session"
+  };
+  for (size_t i = 0; i < sizeof(kws) / sizeof(kws[0]); i++) {
+    if (sv_eq(sv, kws[i])) return true;
+  }
+  return false;
+}
+
 static A1Token tk(A1TokenKind kind, A1SourcePos s, A1SourcePos e, const char* p, size_t n) {
   A1Token t;
   t.kind = kind;
@@ -125,6 +141,7 @@ A1Token a1_lexer_next(A1Lexer* lx) {
     else if (sv_eq(sv, "async")) kind = A1_TK_KW_ASYNC;
     else if (sv_eq(sv, "await")) kind = A1_TK_KW_AWAIT;
     else if (sv_eq(sv, "cfg")) kind = A1_TK_KW_CFG;
+    else if (a1_is_reserved_keyword(sv)) kind = A1_TK_IDENT;
     return tk(kind, s, pos_now(lx), sv.ptr, sv.len);
   }
 

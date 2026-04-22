@@ -72,3 +72,4 @@ typedef struct A1Lexer {
 
 void a1_lexer_init(A1Lexer* lx, const char* src, size_t len);
 A1Token a1_lexer_next(A1Lexer* lx);
+bool a1_is_reserved_keyword(A1StringView sv);
