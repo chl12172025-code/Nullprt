@@ -1,0 +1,7 @@
+nprt-doc out docs/example1.nprt docs/example2.nprt
+check html theme responsive sidebar search hover-preview
+check markdown table image-autoscale
+check json schema-version xref-resolve
+check version diff archive
+check groups fold drag
+check graphs inherit dependency call type-hierarchy

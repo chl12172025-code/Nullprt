@@ -1,0 +1,6 @@
+release checklist-completion freeze-window rc-test-cycle rollback-plan
+third-party-audit scope selector disclosure remediation-plan
+compliance export-classification crypto-export license-compat privacy-policy
+ci perf-regression security-scan dependency-vuln coverage-gate
+tests fuzz symbolic concurrency soak
+docs spell links example-compile i18n-consistency

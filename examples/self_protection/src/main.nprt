@@ -1,4 +1,27 @@
 fn main() -> i32 {
-  // Demonstrates anti-debug and integrity check startup path.
+  // Timed integrity check example.
+  let integrity_interval_sec = 15;
+  let integrity_hash = "sha256:placeholder";
+
+  // Anti-debug bypass detection example.
+  let anti_debug_signal = "debugger_timing_anomaly";
+  let bypass_detected = false;
+
+  // Memory encryption region configuration example.
+  let enc_region_start = "0x100000";
+  let enc_region_end = "0x120000";
+  let enc_key_slot = 2;
+
+  // Tamper self-destruct callback example.
+  let tamper_callback = "on_tamper_destroy_session";
+
+  let _i = integrity_interval_sec;
+  let _h = integrity_hash;
+  let _a = anti_debug_signal;
+  let _b = bypass_detected;
+  let _s = enc_region_start;
+  let _e = enc_region_end;
+  let _k = enc_key_slot;
+  let _t = tamper_callback;
   return 0;
 }

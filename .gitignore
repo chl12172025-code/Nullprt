@@ -56,3 +56,4 @@ dkms.conf
 
 # Local generated documentation artifacts
 site/
+scripts/verify_minimal_toolchain_report.txt

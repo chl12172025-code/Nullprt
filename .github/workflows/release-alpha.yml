@@ -7,6 +7,10 @@ on:
         description: "Release tag"
         required: true
         default: "v0.2.0-beta"
+      enable_win_arm64_native:
+        description: "Build win-arm64 on native self-hosted runner"
+        required: false
+        default: "false"
   push:
     tags:
       - "v*-alpha*"
@@ -29,7 +33,7 @@ jobs:
             suffix: win-x64
           - os: windows-latest
             arch: arm64
-            suffix: win-arm64
+            suffix: win-arm64-emulated
           - os: ubuntu-latest
             arch: x86_64
             suffix: linux-x64
@@ -67,9 +71,47 @@ jobs:
           name: release-${{ matrix.suffix }}
           path: nullprt-${{ matrix.suffix }}.zip
 
+  build-win-arm64-native:
+    name: build-windows-arm64-native
+    if: ${{ vars.NPRT_ENABLE_WIN_ARM64_NATIVE == 'true' || github.event.inputs.enable_win_arm64_native == 'true' }}
+    runs-on: [self-hosted, Windows, ARM64]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Confirm native architecture
+        shell: pwsh
+        run: |
+          Write-Host "PROCESSOR_ARCHITECTURE=$env:PROCESSOR_ARCHITECTURE"
+          if ($env:PROCESSOR_ARCHITECTURE -notmatch "ARM64") {
+            Write-Error "Expected ARM64 native runner."
+            exit 1
+          }
+
+      - name: Prepare package directory
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force -Path dist | Out-Null
+          Copy-Item README.md dist/README.md
+          if (Test-Path scripts) { Copy-Item scripts dist/scripts -Recurse -Force }
+          if (Test-Path spec) { Copy-Item spec dist/spec -Recurse -Force }
+          if (Test-Path src) { Copy-Item src dist/src -Recurse -Force }
+
+      - name: Archive package
+        shell: pwsh
+        run: |
+          $out = "nullprt-win-arm64.zip"
+          Compress-Archive -Path dist/* -DestinationPath $out -Force
+
+      - name: Upload native ARM64 artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-win-arm64
+          path: nullprt-win-arm64.zip
+
   publish:
     name: publish-release
-    needs: build
+    needs: [build, build-win-arm64-native]
+    if: ${{ always() && needs.build.result == 'success' && (needs.build-win-arm64-native.result == 'success' || needs.build-win-arm64-native.result == 'skipped') }}
     runs-on: ubuntu-latest
     permissions:
       contents: write

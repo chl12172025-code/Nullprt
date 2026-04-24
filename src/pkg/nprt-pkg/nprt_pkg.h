@@ -26,3 +26,5 @@ bool npkg_sha256_hex(const unsigned char* data, size_t len, char out_hex[65]);
 
 // CAS path: <cache_root>/npkg/dist/sha256/<first2>/<fullhex>
 bool npkg_cas_put(const char* cache_root, const unsigned char* data, size_t len, const char sha256_hex[65], char* out_path, size_t out_path_cap);
+bool npkg_cas_touch_ref(const char* cache_root, const char sha256_hex[65], int delta);
+bool npkg_cas_gc(const char* cache_root, char* out_report, size_t out_report_cap);

@@ -11,15 +11,21 @@ CI passes with expected diagnostics in early-stage bootstrap environments.
 - API 参考（HTML）：`site/api/index.html`（由 `scripts/generate_api_docs.ps1` 生成）
 - 教程目录：`docs/tutorials/`
 - 工程规格：`spec/`
+- 扩展名与图标集成：`docs/extensions/icon-integration.md`
+- 最小工具链验收清单：`docs/verification/minimal-toolchain-checklist.md`
 
 ### 工具链列表
 - `aegc1`：Nullprt 编译器驱动
 - `nprt-pkg`：包管理器
 - `nprt-lsp`：语言服务器（LSP 3.17）
 - `nprt-debug`：开发者版调试器（DAP 集成入口）
+  - 支持最小会话状态：`attach/detach/break/step/stack/status`
 - `nprt-prof`：开发者版性能分析器
+  - 支持 `text/json/html/svg` 输出与 trace 聚合输入（`<symbol> <duration_us>`）
 - `nprt-doc`：API 文档生成器
+  - 生成 `index.html` / `index.md` / `index.json`（最小 API 列表）
 - `nprt-fmt`：代码格式化工具
+  - 支持 `--check/--write/--diff` 与 `--check-all/--write-all/--diff-all`
 - `scripts/generate_api_docs.ps1`：文档生成脚本
 
 ### 示例项目

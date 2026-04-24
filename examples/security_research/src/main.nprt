@@ -1,4 +1,19 @@
 fn main() -> i32 {
-  // Developer-only research example.
+  // Hardware simulation full demo (dev-only).
+  let hw_sim_profile = "cpu_id_spoof_profile_a";
+
+  // VM detection bypass example (dev-only compatibility test).
+  let vm_bypass_strategy = "hypervisor_artifact_masking";
+
+  // Cross-process memory analysis flow (dev-only).
+  let target_pid = 1337;
+  let scan_region = "0x400000-0x4fffff";
+  let symbol_map = "target.map";
+
+  let _h = hw_sim_profile;
+  let _v = vm_bypass_strategy;
+  let _p = target_pid;
+  let _r = scan_region;
+  let _m = symbol_map;
   return 0;
 }

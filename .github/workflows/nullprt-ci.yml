@@ -112,6 +112,96 @@ jobs:
           "exit_code=$code" >> $env:GITHUB_OUTPUT
           exit 0
 
+      - name: Verify compiler full-completion assets (all OS)
+        id: compilerfull
+        shell: pwsh
+        run: |
+          pwsh -ExecutionPolicy Bypass -File scripts/verify_compiler_full_completion.ps1
+          $code = $LASTEXITCODE
+          "exit_code=$code" >> $env:GITHUB_OUTPUT
+          exit 0
+
+      - name: Verify LSP full-completion assets (all OS)
+        id: lspfull
+        shell: pwsh
+        run: |
+          pwsh -ExecutionPolicy Bypass -File scripts/verify_lsp_full_completion.ps1
+          $code = $LASTEXITCODE
+          "exit_code=$code" >> $env:GITHUB_OUTPUT
+          exit 0
+
+      - name: Verify debugger full-completion assets (all OS)
+        id: debugfull
+        shell: pwsh
+        run: |
+          pwsh -ExecutionPolicy Bypass -File scripts/verify_debugger_full_completion.ps1
+          $code = $LASTEXITCODE
+          "exit_code=$code" >> $env:GITHUB_OUTPUT
+          exit 0
+
+      - name: Verify profiler full-completion assets (all OS)
+        id: proffull
+        shell: pwsh
+        run: |
+          pwsh -ExecutionPolicy Bypass -File scripts/verify_profiler_full_completion.ps1
+          $code = $LASTEXITCODE
+          "exit_code=$code" >> $env:GITHUB_OUTPUT
+          exit 0
+
+      - name: Verify doc full-completion assets (all OS)
+        id: docfull
+        shell: pwsh
+        run: |
+          pwsh -ExecutionPolicy Bypass -File scripts/verify_doc_full_completion.ps1
+          $code = $LASTEXITCODE
+          "exit_code=$code" >> $env:GITHUB_OUTPUT
+          exit 0
+
+      - name: Verify formatter full-completion assets (all OS)
+        id: fmtfull
+        shell: pwsh
+        run: |
+          pwsh -ExecutionPolicy Bypass -File scripts/verify_formatter_full_completion.ps1
+          $code = $LASTEXITCODE
+          "exit_code=$code" >> $env:GITHUB_OUTPUT
+          exit 0
+
+      - name: Verify docs site full-completion assets (all OS)
+        id: docssitefull
+        shell: pwsh
+        run: |
+          pwsh -ExecutionPolicy Bypass -File scripts/verify_docs_site_full_completion.ps1
+          $code = $LASTEXITCODE
+          "exit_code=$code" >> $env:GITHUB_OUTPUT
+          exit 0
+
+      - name: Verify examples full-completion assets (all OS)
+        id: examplesfull
+        shell: pwsh
+        run: |
+          pwsh -ExecutionPolicy Bypass -File scripts/verify_examples_full_completion.ps1
+          $code = $LASTEXITCODE
+          "exit_code=$code" >> $env:GITHUB_OUTPUT
+          exit 0
+
+      - name: Verify release and QA full-completion assets (all OS)
+        id: qafull
+        shell: pwsh
+        run: |
+          pwsh -ExecutionPolicy Bypass -File scripts/verify_release_qa_full_completion.ps1
+          $code = $LASTEXITCODE
+          "exit_code=$code" >> $env:GITHUB_OUTPUT
+          exit 0
+
+      - name: Verify community/ecosystem full-completion assets (all OS)
+        id: communityfull
+        shell: pwsh
+        run: |
+          pwsh -ExecutionPolicy Bypass -File scripts/verify_community_ecosystem_full_completion.ps1
+          $code = $LASTEXITCODE
+          "exit_code=$code" >> $env:GITHUB_OUTPUT
+          exit 0
+
       - name: Enforce required step outcomes
         if: success() || failure()
         shell: pwsh
@@ -124,6 +214,56 @@ jobs:
           }
           if ($tests -ne "0") {
             Write-Error "Required tests step failed (exit=$tests)."
+            exit 1
+          }
+          $compilerfull = "${{ steps.compilerfull.outputs.exit_code }}"
+          if ($compilerfull -ne "0") {
+            Write-Error "Required compiler full-completion step failed (exit=$compilerfull)."
+            exit 1
+          }
+          $lspfull = "${{ steps.lspfull.outputs.exit_code }}"
+          if ($lspfull -ne "0") {
+            Write-Error "Required LSP full-completion step failed (exit=$lspfull)."
+            exit 1
+          }
+          $debugfull = "${{ steps.debugfull.outputs.exit_code }}"
+          if ($debugfull -ne "0") {
+            Write-Error "Required debugger full-completion step failed (exit=$debugfull)."
+            exit 1
+          }
+          $proffull = "${{ steps.proffull.outputs.exit_code }}"
+          if ($proffull -ne "0") {
+            Write-Error "Required profiler full-completion step failed (exit=$proffull)."
+            exit 1
+          }
+          $docfull = "${{ steps.docfull.outputs.exit_code }}"
+          if ($docfull -ne "0") {
+            Write-Error "Required doc full-completion step failed (exit=$docfull)."
+            exit 1
+          }
+          $fmtfull = "${{ steps.fmtfull.outputs.exit_code }}"
+          if ($fmtfull -ne "0") {
+            Write-Error "Required formatter full-completion step failed (exit=$fmtfull)."
+            exit 1
+          }
+          $docssitefull = "${{ steps.docssitefull.outputs.exit_code }}"
+          if ($docssitefull -ne "0") {
+            Write-Error "Required docs site full-completion step failed (exit=$docssitefull)."
+            exit 1
+          }
+          $examplesfull = "${{ steps.examplesfull.outputs.exit_code }}"
+          if ($examplesfull -ne "0") {
+            Write-Error "Required examples full-completion step failed (exit=$examplesfull)."
+            exit 1
+          }
+          $qafull = "${{ steps.qafull.outputs.exit_code }}"
+          if ($qafull -ne "0") {
+            Write-Error "Required release/qa full-completion step failed (exit=$qafull)."
+            exit 1
+          }
+          $communityfull = "${{ steps.communityfull.outputs.exit_code }}"
+          if ($communityfull -ne "0") {
+            Write-Error "Required community/ecosystem full-completion step failed (exit=$communityfull)."
             exit 1
           }
           Write-Host "Required checks passed. Diagnostic steps may still emit warnings."
@@ -169,6 +309,16 @@ jobs:
           Add-Report "scripts/cross_compile_report.txt" "cross_compile_report.txt"
           Add-Report "scripts/aegc1_selfhost_report.txt" "aegc1_selfhost_report.txt"
           Add-Report "scripts/selfhost_readiness_report.txt" "selfhost_readiness_report.txt"
+          Add-Report "scripts/verify_compiler_full_completion_report.txt" "verify_compiler_full_completion_report.txt"
+          Add-Report "scripts/verify_lsp_full_completion_report.txt" "verify_lsp_full_completion_report.txt"
+          Add-Report "scripts/verify_debugger_full_completion_report.txt" "verify_debugger_full_completion_report.txt"
+          Add-Report "scripts/verify_profiler_full_completion_report.txt" "verify_profiler_full_completion_report.txt"
+          Add-Report "scripts/verify_doc_full_completion_report.txt" "verify_doc_full_completion_report.txt"
+          Add-Report "scripts/verify_formatter_full_completion_report.txt" "verify_formatter_full_completion_report.txt"
+          Add-Report "scripts/verify_docs_site_full_completion_report.txt" "verify_docs_site_full_completion_report.txt"
+          Add-Report "scripts/verify_examples_full_completion_report.txt" "verify_examples_full_completion_report.txt"
+          Add-Report "scripts/verify_release_qa_full_completion_report.txt" "verify_release_qa_full_completion_report.txt"
+          Add-Report "scripts/verify_community_ecosystem_full_completion_report.txt" "verify_community_ecosystem_full_completion_report.txt"
           Add-Report "tests/aegc1/test_report.txt" "tests/aegc1/test_report.txt"
           Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value "### Step outcomes"
           Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value "- detect: ${{ steps.detect.outputs.exit_code }}"
@@ -177,6 +327,16 @@ jobs:
           Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value "- selfhost: ${{ steps.selfhost.outputs.exit_code }}"
           Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value "- smoke(required): ${{ steps.smoke.outputs.exit_code }}"
           Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value "- tests(required): ${{ steps.tests.outputs.exit_code }}"
+          Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value "- compilerfull(required): ${{ steps.compilerfull.outputs.exit_code }}"
+          Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value "- lspfull(required): ${{ steps.lspfull.outputs.exit_code }}"
+          Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value "- debugfull(required): ${{ steps.debugfull.outputs.exit_code }}"
+          Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value "- proffull(required): ${{ steps.proffull.outputs.exit_code }}"
+          Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value "- docfull(required): ${{ steps.docfull.outputs.exit_code }}"
+          Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value "- fmtfull(required): ${{ steps.fmtfull.outputs.exit_code }}"
+          Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value "- docssitefull(required): ${{ steps.docssitefull.outputs.exit_code }}"
+          Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value "- examplesfull(required): ${{ steps.examplesfull.outputs.exit_code }}"
+          Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value "- qafull(required): ${{ steps.qafull.outputs.exit_code }}"
+          Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value "- communityfull(required): ${{ steps.communityfull.outputs.exit_code }}"
 
   summary:
     needs: [verify]

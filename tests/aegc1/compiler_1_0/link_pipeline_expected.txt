@@ -1,0 +1,5 @@
+spill_cost_model=enabled
+incremental_patch=enabled
+lazy_stub=enabled
+prelink_inline=enabled
+postlink_rewrite=enabled

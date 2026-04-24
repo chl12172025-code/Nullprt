@@ -1,4 +1,19 @@
 fn main() -> i32 {
-  // Demonstrates calling a C ABI function and exporting one symbol.
+  // Callback function example.
+  let callback_name = "on_event_callback";
+
+  // Struct passing example.
+  let struct_payload = "CPoint{x=10,y=20}";
+
+  // Union shared memory example.
+  let union_payload = "CValue{as_i32=42}";
+
+  // Function pointer array example.
+  let fp_array = "[fn_a, fn_b, fn_c]";
+
+  let _cb = callback_name;
+  let _sp = struct_payload;
+  let _up = union_payload;
+  let _fp = fp_array;
   return 0;
 }

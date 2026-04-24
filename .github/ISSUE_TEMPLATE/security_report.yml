@@ -1,0 +1,25 @@
+name: Security Report
+description: Security-sensitive issue template
+title: "[security] "
+labels: ["security"]
+body:
+  - type: markdown
+    attributes:
+      value: "For embargoed issues, prefer private disclosure at security@nullprt.org."
+  - type: textarea
+    id: impact
+    attributes:
+      label: Impact
+      description: Confidentiality, integrity, availability impact.
+    validations:
+      required: true
+  - type: textarea
+    id: attack
+    attributes:
+      label: Attack scenario
+    validations:
+      required: true
+  - type: textarea
+    id: mitigation
+    attributes:
+      label: Suggested mitigation

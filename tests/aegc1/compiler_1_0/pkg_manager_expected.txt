@@ -1,0 +1,15 @@
+dep_graph_scc=enabled
+diamond_unify=enabled
+optional_transitive=enabled
+conflict_reason_trace=enabled
+chunk_download_resume=enabled
+parallel_download_throttle=enabled
+cas_compression=enabled
+refcount_gc=enabled
+strip_symbols=enabled
+upload_chunk_resume=enabled
+metadata_signature=enabled
+deprecation_notice=enabled
+transaction_rollback=enabled
+symlink_permission=enabled
+parallel_lock_merge=enabled

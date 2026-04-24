@@ -2,18 +2,35 @@
 <html>
 <head>
   <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Nullprt API Reference</title>
+  <link rel="stylesheet" href="../site/styles.css" />
 </head>
 <body>
   <h1>Nullprt API Reference</h1>
   <p>Generated API index for Nullprt modules.</p>
+  <p><strong>Schema version:</strong> 2.0</p>
   <ul>
-    <li>Compiler: aegc1</li>
-    <li>Package manager: nprt-pkg</li>
-    <li>LSP: nprt-lsp</li>
-    <li>Debugger: nprt-debug</li>
-    <li>Profiler: nprt-prof</li>
-    <li>Formatter: nprt-fmt</li>
+    <li>Compiler: aegc1 <span class="version-tag">since 1.0.0</span></li>
+    <li>Package manager: nprt-pkg <span class="version-tag">since 0.2.0-beta</span></li>
+    <li>LSP: nprt-lsp <span class="version-tag">since 0.2.0-beta</span></li>
+    <li>Debugger: nprt-debug <span class="version-tag">since 1.0.0</span></li>
+    <li>Profiler: nprt-prof <span class="version-tag">since 1.0.0</span></li>
+    <li>Formatter: nprt-fmt <span class="version-tag">since 1.0.0</span></li>
+  </ul>
+  <h2>Parameter Defaults</h2>
+  <table>
+    <tr><th>API</th><th>Parameter</th><th>Default</th></tr>
+    <tr><td>nprt-prof</td><td>sampling_hz</td><td>1000</td></tr>
+    <tr><td>nprt-debug</td><td>remote_latency_ms</td><td>20</td></tr>
+    <tr><td>nprt-fmt</td><td>line_width</td><td>100</td></tr>
+  </table>
+  <h2>Exception List</h2>
+  <ul>
+    <li>`E-NPRT-IO`: file read/write failure</li>
+    <li>`E-NPRT-SYNTAX`: parser mismatch</li>
+    <li>`E-NPRT-SEC`: security gate denied</li>
+    <li>`E-NPRT-TIMEOUT`: operation timeout</li>
   </ul>
   <p><strong>Ethical use warning:</strong> high-risk APIs are limited to authorized developer research scenarios.</p>
 </body>

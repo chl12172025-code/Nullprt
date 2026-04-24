@@ -13,6 +13,7 @@ typedef enum A1InsnKind {
   A1_INSN_CMP_IMM,
   A1_INSN_JCC,
   A1_INSN_CALL,
+  A1_INSN_AVX_BLEND,
   A1_INSN_RET
 } A1InsnKind;
 

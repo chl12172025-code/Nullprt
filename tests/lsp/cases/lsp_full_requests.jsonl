@@ -1,0 +1,13 @@
+{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"capabilities":{"textDocument":{"diagnostic":{"dynamicRegistration":false}}}}}
+{"jsonrpc":"2.0","method":"textDocument/didOpen","params":{"textDocument":{"uri":"file:///ws/a.nprt","languageId":"nprt","version":1,"text":"/// add docs\nmacro_rules! wrap { ($x)=>{$x} }\nfn add(x: i32, y: i32) -> i32 { return x + y; }\nlet value = add(1,2)\n// add referenced in comment\n"}}}
+{"jsonrpc":"2.0","method":"textDocument/didOpen","params":{"textDocument":{"uri":"file:///ws/b.nprt","languageId":"nprt","version":1,"text":"fn main() -> i32 { let z = add(2,3); wrap!(z); return z; }"}}}
+{"jsonrpc":"2.0","id":2,"method":"textDocument/completion","params":{"textDocument":{"uri":"file:///ws/b.nprt"},"position":{"line":0,"character":23}}}
+{"jsonrpc":"2.0","id":3,"method":"textDocument/definition","params":{"textDocument":{"uri":"file:///ws/b.nprt"},"position":{"line":0,"character":23}}}
+{"jsonrpc":"2.0","id":4,"method":"textDocument/references","params":{"textDocument":{"uri":"file:///ws/b.nprt"},"position":{"line":0,"character":23},"context":{"includeDeclaration":true},"includeComments":true}}
+{"jsonrpc":"2.0","id":5,"method":"textDocument/rename","params":{"textDocument":{"uri":"file:///ws/b.nprt"},"position":{"line":0,"character":23},"newName":"add2","updateComments":true}}
+{"jsonrpc":"2.0","id":6,"method":"textDocument/hover","params":{"textDocument":{"uri":"file:///ws/b.nprt"},"position":{"line":0,"character":23}}}
+{"jsonrpc":"2.0","id":7,"method":"textDocument/diagnostic","params":{"textDocument":{"uri":"file:///ws/b.nprt"}}}
+{"jsonrpc":"2.0","id":8,"method":"textDocument/semanticTokens/range","params":{"textDocument":{"uri":"file:///ws/b.nprt"},"range":{"start":{"line":0,"character":0},"end":{"line":0,"character":40}}}}
+{"jsonrpc":"2.0","id":9,"method":"workspace/executeCommand","params":{"command":"nprt.previewRefactor"}}
+{"jsonrpc":"2.0","id":10,"method":"shutdown","params":null}
+{"jsonrpc":"2.0","method":"exit","params":null}

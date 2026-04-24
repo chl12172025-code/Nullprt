@@ -1,0 +1,7 @@
+x86_64=avx
+arm64=sve
+riscv=rvv
+wasm=multivalue
+sparc=register_window
+powerpc=link_stack
+mips=delay_slot

@@ -1,4 +1,21 @@
 fn main() -> i32 {
-  // Demonstrates device fingerprint + license binding flow.
+  // Offline activation example.
+  let offline_request = "REQ-DEVICE-FP";
+  let offline_activation_code = "ACT-XXXX-YYYY";
+
+  // Heartbeat keepalive example.
+  let heartbeat_interval_sec = 30;
+  let heartbeat_endpoint = "https://license.example/heartbeat";
+
+  // Revocation flow example.
+  let revocation_list_version = 3;
+  let revoked_serial = "SERIAL-REVOKED";
+
+  let _req = offline_request;
+  let _act = offline_activation_code;
+  let _hb = heartbeat_interval_sec;
+  let _ep = heartbeat_endpoint;
+  let _rl = revocation_list_version;
+  let _rs = revoked_serial;
   return 0;
 }

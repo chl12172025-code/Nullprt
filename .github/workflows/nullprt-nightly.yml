@@ -5,6 +5,9 @@ on:
     - cron: "0 2 * * *"
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   nightly-verify:
     name: nightly-${{ matrix.os }}
@@ -76,3 +79,41 @@ jobs:
             Get-Content "scripts/selfhost_readiness_report.txt" | Add-Content -Path $env:GITHUB_STEP_SUMMARY
             Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value '```'
           }
+
+  publish-nightly-prerelease:
+    name: publish-nightly-prerelease
+    needs: nightly-verify
+    if: always() && needs.nightly-verify.result == 'success'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download nightly artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: nightly-artifacts
+
+      - name: Compose nightly metadata
+        id: nightlymeta
+        shell: bash
+        run: |
+          tag="nightly-$(date +%Y%m%d)"
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+          cat > NIGHTLY_NOTES.md <<EOF
+          ${tag}
+
+          - Automated nightly prerelease from workflow \`${GITHUB_WORKFLOW}\`
+          - Includes CI reports and build artifacts from all nightly matrix jobs
+          EOF
+
+      - name: Publish nightly prerelease
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.nightlymeta.outputs.tag }}
+          name: ${{ steps.nightlymeta.outputs.tag }}
+          body_path: NIGHTLY_NOTES.md
+          prerelease: true
+          make_latest: false
+          files: |
+            nightly-artifacts/**/*

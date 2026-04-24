@@ -1,0 +1,23 @@
+attach 100
+break main --if "x > 0 && ready" --log "{hit}:{symbol}" --trace "pc=0x1000" --hit 3
+hbreak-data 0x1000 8 rw
+hbreak-exec 0x2000 0x2100
+step over --latency-ms 30 --blacklist runtime_entry,panic_handler
+stack switch 1
+setvar counter 42
+vars search count
+vars format hex
+mem-search deadbeef
+mem-edit 0x1000 ff
+mem-edit 0x1000 ff undo
+mem-edit 0x1000 ff redo
+eval "1 + 2 * 3"
+processes nprt
+core-load sample.core
+remote-config 127.0.0.1:9000 compress on latency-ms 50
+remote-send payload_data
+thread-locks
+deadlock
+dylib-break libSystem
+dylib-load-symbol libSystem malloc
+status

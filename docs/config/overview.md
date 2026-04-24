@@ -14,6 +14,7 @@ Nullprt configuration uses a dedicated syntax and parser to avoid coupling with 
 - `NPRTcfg.nullprtconfig` (long alias)
 - `deps.nprtpkg`
 - `deps.nprtlock`
+- `NPRT_CACHE/installed.txt` (package install state for `nprt-pkg`)
 
 ## Safety notes
 - Security-sensitive values should be loaded via environment or secret files.

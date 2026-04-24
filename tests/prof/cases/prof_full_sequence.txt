@@ -1,0 +1,4 @@
+text trace_full.prof cycles,branches,cache 1500 60000 bench.env
+json trace_full.prof cycles,branches,cache 1500 60000 bench.env
+html trace_full.prof cycles,branches,cache 1500 60000 bench.env
+svg trace_full.prof cycles,branches,cache 1500 60000 bench.env

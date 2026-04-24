@@ -1,0 +1,18 @@
+use crate::math::fib;
+
+fn bench_fib(iter: i32) -> i32 {
+  let i = 0;
+  let acc = 0;
+  // Placeholder benchmark loop.
+  // In production, measure elapsed_us around this loop.
+  while i < iter {
+    let _x = fib(20);
+    i = i + 1;
+  }
+  return acc;
+}
+
+fn main() -> i32 {
+  let _r = bench_fib(1000);
+  return 0;
+}

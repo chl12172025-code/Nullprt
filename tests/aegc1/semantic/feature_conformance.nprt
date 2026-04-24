@@ -1,0 +1,26 @@
+// Nullprt 1.0 semantic conformance fixture.
+// nested_pattern_depth=24
+
+#[hygiene]
+macro_rules! safe_wrap {
+  ($x) => { $x }
+}
+
+fn dependent_refine_contract<T>(x: T) -> i32 where T: Ord {
+  let quantity_value = 1;
+  let graded_level = 2;
+  let recursive_marker = quantity_value;
+  let session_protocol = graded_level;
+  let effect_handler = session_protocol;
+  let invariant_state = effect_handler;
+  let proof_goal = invariant_state;
+  let size_bound = 8;
+  let value_dependent = size_bound;
+  let row_record = value_dependent;
+  let exists_pack = row_record;
+  return exists_pack;
+}
+
+async fn coro_scheduler_gen() -> i32 {
+  return 0;
+}

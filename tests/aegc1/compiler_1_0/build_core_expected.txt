@@ -1,0 +1,3 @@
+build_graph_persistence=enabled
+distributed_protocol=enabled
+pch_compatibility=enabled

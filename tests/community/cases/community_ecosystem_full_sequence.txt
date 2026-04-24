@@ -1,0 +1,11 @@
+community_docs_present
+contributing_governance_sections
+conduct_reporting_sections
+roadmap_planning_sections
+issue_templates_present
+pr_template_present
+blog_program_present
+paper_plan_present
+icon_marketplace_publish_doc
+win_arm64_native_runner_plan
+nightly_prerelease_upload_configured

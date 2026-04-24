@@ -1,0 +1,23 @@
+name: Performance Issue
+description: Report regression or hotspot
+title: "[perf] "
+labels: ["performance"]
+body:
+  - type: textarea
+    id: scenario
+    attributes:
+      label: Benchmark scenario
+      description: Input size, hardware, environment.
+    validations:
+      required: true
+  - type: textarea
+    id: data
+    attributes:
+      label: Baseline vs current
+      description: Include before/after numbers and variance.
+    validations:
+      required: true
+  - type: textarea
+    id: trace
+    attributes:
+      label: Profiler output

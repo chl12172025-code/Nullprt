@@ -12,14 +12,15 @@ A1MachineModule a1_x64_lower(const A1IrModule* ir, A1CallConv cc) {
     mm.fns = n;
     mm.fns[mm.len].name = ir->fns[i].name;
     mm.fns[mm.len].cc = cc;
-    mm.fns[mm.len].stack_size = 32; // placeholder prologue requirement
-    mm.fns[mm.len].insn_count = 6;
+    mm.fns[mm.len].stack_size = 64; // AVX registers require wider save area.
+    mm.fns[mm.len].insn_count = 7;
     mm.fns[mm.len].insns = (A1InsnKind*)calloc(mm.fns[mm.len].insn_count, sizeof(A1InsnKind));
     if (mm.fns[mm.len].insns) {
-      A1InsnKind seq[6] = {
+      A1InsnKind seq[7] = {
         A1_INSN_PROLOGUE,
         A1_INSN_MOV_IMM,
         A1_INSN_CMP_IMM,
+        A1_INSN_AVX_BLEND,
         A1_INSN_JCC,
         A1_INSN_CALL,
         A1_INSN_RET

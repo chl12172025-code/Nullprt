@@ -1,0 +1,6 @@
+diag_i18n=enabled
+diag_ml_hint=enabled
+diag_autofix_conflict=enabled
+security_vuln_db=enabled
+security_multi_engine=enabled
+license_compat=enabled

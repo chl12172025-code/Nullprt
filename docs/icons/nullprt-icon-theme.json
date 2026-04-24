@@ -1,0 +1,78 @@
+{
+    "$schema":  "vscode://schemas/icon-theme",
+    "iconDefinitions":  {
+                            "nprt.source":  {
+                                                "iconPath":  "./nullprt.svg"
+                                            },
+                            "nprt.config":  {
+                                                "iconPath":  "./nullprt-config.svg"
+                                            },
+                            "nprt.binary":  {
+                                                "iconPath":  "./nullprt-binary.svg"
+                                            },
+                            "nprt.docs":  {
+                                              "iconPath":  "./nullprt.svg"
+                                          },
+                            "nprt.security":  {
+                                                  "iconPath":  "./nullprt-config.svg"
+                                              },
+                            "nprt.ir":  {
+                                            "iconPath":  "./nullprt-binary.svg"
+                                        }
+                        },
+    "fileExtensions":  {
+                           "nprti":  "nprt.source",
+                           "nullprtdocument":  "nprt.docs",
+                           "nullprtconfig":  "nprt.config",
+                           "nprtir":  "nprt.ir",
+                           "nprtconfig":  "nprt.config",
+                           "nprtsig":  "nprt.security",
+                           "nprtenv":  "nprt.config",
+                           "nprtkey":  "nprt.security",
+                           "nullprtmir":  "nprt.ir",
+                           "nullprtmodule":  "nprt.source",
+                           "nullprtmanifest":  "nprt.binary",
+                           "nprtpkg":  "nprt.binary",
+                           "nprtlir":  "nprt.ir",
+                           "nprtso":  "nprt.binary",
+                           "nullprtinterface":  "nprt.source",
+                           "nprthir":  "nprt.ir",
+                           "nullprtlicense":  "nprt.security",
+                           "nprtl":  "nprt.binary",
+                           "nprtex":  "nprt.docs",
+                           "nullprtlir":  "nprt.ir",
+                           "nullprtintermediaterepresentation":  "nprt.ir",
+                           "nullprthir":  "nprt.ir",
+                           "nullprtbytecode":  "nprt.binary",
+                           "nullprtsignature":  "nprt.security",
+                           "nprtdoc":  "nprt.docs",
+                           "nprtb":  "nprt.binary",
+                           "nprta":  "nprt.binary",
+                           "nullprtsecret":  "nprt.security",
+                           "nprto":  "nprt.binary",
+                           "nullprtdynamiclibrary":  "nprt.binary",
+                           "nullprtobject":  "nprt.binary",
+                           "nullprtkey":  "nprt.security",
+                           "nprtlock":  "nprt.binary",
+                           "nprttut":  "nprt.docs",
+                           "nullprtlibrary":  "nprt.binary",
+                           "nprtm":  "nprt.source",
+                           "nprtcfg":  "nprt.config",
+                           "nprtsecret":  "nprt.security",
+                           "nullprtexample":  "nprt.docs",
+                           "nullprtenvironment":  "nprt.config",
+                           "nprtdll":  "nprt.binary",
+                           "nullprt":  "nprt.source",
+                           "nullprtlock":  "nprt.binary",
+                           "nprtlicense":  "nprt.security",
+                           "nprtmanifest":  "nprt.binary",
+                           "nprt":  "nprt.source",
+                           "nullprtpackage":  "nprt.binary",
+                           "nullprtsharedobject":  "nprt.binary",
+                           "nullprttutorial":  "nprt.docs",
+                           "nprtcert":  "nprt.security",
+                           "nprtmir":  "nprt.ir",
+                           "nullprtcertificate":  "nprt.security",
+                           "nullprtarchive":  "nprt.binary"
+                       }
+}

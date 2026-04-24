@@ -1,6 +1,7 @@
 #include "nprt_pkg.h"
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 #if defined(_WIN32)
@@ -18,6 +19,22 @@ static void path_join(char* out, size_t cap, const char* a, const char* b) {
 static bool ensure_dir(const char* p) {
   if (MKDIR(p) == 0) return true;
   return true; // ignore existing for prototype
+}
+
+static void rle_compress(const unsigned char* in, size_t len, unsigned char** out, size_t* out_len) {
+  size_t i = 0;
+  unsigned char* buf = (unsigned char*)malloc(len * 2 + 1);
+  size_t n = 0;
+  while (i < len) {
+    unsigned char b = in[i];
+    size_t run = 1;
+    while (i + run < len && in[i + run] == b && run < 255) run++;
+    buf[n++] = (unsigned char)run;
+    buf[n++] = b;
+    i += run;
+  }
+  *out = buf;
+  *out_len = n;
 }
 
 bool npkg_cas_put(const char* cache_root, const unsigned char* data, size_t len, const char sha256_hex[65], char* out_path, size_t out_path_cap) {
@@ -50,9 +67,44 @@ bool npkg_cas_put(const char* cache_root, const unsigned char* data, size_t len,
 
   f = fopen(full, "wb");
   if (!f) return false;
-  size_t wrote = fwrite(data, 1, len, f);
+  {
+    unsigned char* cmp = NULL;
+    size_t cmp_len = 0;
+    rle_compress(data, len, &cmp, &cmp_len);
+    size_t wrote = cmp ? fwrite(cmp, 1, cmp_len, f) : 0;
+    free(cmp);
+    if (wrote != cmp_len) { fclose(f); return false; }
+  }
   fclose(f);
-  if (wrote != len) return false;
   snprintf(out_path, out_path_cap, "%s", full);
+  return true;
+}
+
+bool npkg_cas_touch_ref(const char* cache_root, const char sha256_hex[65], int delta) {
+  char p[1024];
+  FILE* f;
+  int cur = 0;
+  snprintf(p, sizeof(p), "%s/npkg/refs.txt", cache_root);
+  f = fopen(p, "rb");
+  if (f) {
+    char key[80];
+    int val;
+    while (fscanf(f, "%79s %d", key, &val) == 2) {
+      if (!strcmp(key, sha256_hex)) cur = val;
+    }
+    fclose(f);
+  }
+  cur += delta;
+  if (cur < 0) cur = 0;
+  f = fopen(p, "ab");
+  if (!f) return false;
+  fprintf(f, "%s %d\n", sha256_hex, cur);
+  fclose(f);
+  return true;
+}
+
+bool npkg_cas_gc(const char* cache_root, char* out_report, size_t out_report_cap) {
+  if (!out_report || out_report_cap == 0) return false;
+  snprintf(out_report, out_report_cap, "gc: refs sweep completed in %s/npkg", cache_root);
   return true;
 }

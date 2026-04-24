@@ -1,0 +1,6 @@
+--check sample_mixed_indent.nprt
+--diff sample_long_line.nprt
+--check sample_alignment.nprt
+--check sample_chain.nprt
+--check sample_comments.nprt
+--check sample_attr_macro.nprt

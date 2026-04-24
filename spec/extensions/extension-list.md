@@ -60,3 +60,5 @@ This file defines canonical short and long extension aliases for Nullprt artifac
 - Short form is preferred for source repositories.
 - Long form is accepted by parser and tooling as an alias.
 - Unknown extensions are treated as opaque assets unless bound by config rules.
+- Runtime alias resolution is implemented in `src/self/aegc1/runtime/extension_registry.c`.
+- A complete superset catalog is provided in `spec/extensions/extension-catalog.md`.

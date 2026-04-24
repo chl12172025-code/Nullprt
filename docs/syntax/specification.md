@@ -2,6 +2,18 @@
 
 This document defines the independent Nullprt syntax system for language, tooling, and diagnostics.
 
+## 0. 1.0 Semantic Conformance Notes
+
+The `aegc1` 1.0 compiler pipeline now enforces a semantic conformance matrix for advanced language features through:
+- parser feature-bit inference and nested pattern depth policy (`nested_pattern_depth=<N>`)
+- typed semantic checks with deterministic diagnostics `E1001`..`E1030`
+- borrow/resource/linearity baseline validation and generic instantiation guards
+- typed IR metadata propagation for async/generator/coroutine, contract/invariant, and advanced feature flags
+
+The conformance fixture and expected diagnostic-code set are tracked at:
+- `tests/aegc1/semantic/feature_conformance.nprt`
+- `tests/aegc1/semantic/feature_expected_codes.txt`
+
 ## 1. Keywords
 
 Nullprt reserves keywords by domain to avoid overlap ambiguity and maintain grammar stability.

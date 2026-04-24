@@ -1,0 +1,21 @@
+use crate::math::{add, fib};
+
+fn test_add() -> i32 {
+  if add(1, 2) != 3 {
+    return 1;
+  }
+  return 0;
+}
+
+fn test_fib() -> i32 {
+  if fib(8) != 21 {
+    return 1;
+  }
+  return 0;
+}
+
+fn main() -> i32 {
+  if test_add() != 0 { return 1; }
+  if test_fib() != 0 { return 1; }
+  return 0;
+}

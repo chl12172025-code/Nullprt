@@ -1,0 +1,7 @@
+hello_world multi-file unit-test benchmark
+http_server https websocket middleware
+license_verification offline-activate heartbeat revocation
+self_protection timed-integrity anti-debug-bypass encrypted-region tamper-callback
+c_interop callback struct union fp-array
+security_research hw-sim vm-bypass cross-process-analysis
+all_examples benchmark-data security-notes faq exercises

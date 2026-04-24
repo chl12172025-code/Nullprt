@@ -1,3 +1,12 @@
+use crate::math::{add, fib};
+
 fn main() -> i32 {
-  return 0;
+  let sum = add(20, 22);
+  let f = fib(10);
+  // Demo output path (placeholder runtime print API).
+  let _msg = "hello_world multi-file ready";
+  if sum == 42 && f == 55 {
+    return 0;
+  }
+  return 1;
 }

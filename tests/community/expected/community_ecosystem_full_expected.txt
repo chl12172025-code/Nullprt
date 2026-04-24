@@ -1,0 +1,11 @@
+community_docs_present=true
+contributing_governance_sections=true
+conduct_reporting_sections=true
+roadmap_planning_sections=true
+issue_templates_present=true
+pr_template_present=true
+blog_program_present=true
+paper_plan_present=true
+icon_marketplace_publish_doc=true
+win_arm64_native_runner_plan=true
+nightly_prerelease_upload_configured=true
