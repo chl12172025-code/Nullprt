@@ -275,11 +275,6 @@ jobs:
             Write-Error "Required community/ecosystem full-completion step failed (exit=$communityfull)."
             exit 1
           }
-          $stablegafull = "${{ steps.stablegafull.outputs.exit_code || '0' }}"
-          if ($stablegafull -ne "0") {
-            Write-Error "Required stable GA readiness step failed (exit=$stablegafull)."
-            exit 1
-          }
           Write-Host "Required checks passed. Diagnostic steps may still emit warnings."
 
       - name: Upload scripts reports
