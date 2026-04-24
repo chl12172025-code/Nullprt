@@ -202,6 +202,15 @@ jobs:
           "exit_code=$code" >> $env:GITHUB_OUTPUT
           exit 0
 
+      - name: Verify release stable GA readiness assets (all OS)
+        id: stablegafull
+        shell: pwsh
+        run: |
+          pwsh -ExecutionPolicy Bypass -File scripts/verify_release_stable_ga.ps1
+          $code = $LASTEXITCODE
+          "exit_code=$code" >> $env:GITHUB_OUTPUT
+          exit 0
+
       - name: Enforce required step outcomes
         if: success() || failure()
         shell: pwsh
@@ -266,6 +275,11 @@ jobs:
             Write-Error "Required community/ecosystem full-completion step failed (exit=$communityfull)."
             exit 1
           }
+          $stablegafull = "${{ steps.stablegafull.outputs.exit_code }}"
+          if ($stablegafull -ne "0") {
+            Write-Error "Required stable GA readiness step failed (exit=$stablegafull)."
+            exit 1
+          }
           Write-Host "Required checks passed. Diagnostic steps may still emit warnings."
 
       - name: Upload scripts reports
@@ -319,6 +333,7 @@ jobs:
           Add-Report "scripts/verify_examples_full_completion_report.txt" "verify_examples_full_completion_report.txt"
           Add-Report "scripts/verify_release_qa_full_completion_report.txt" "verify_release_qa_full_completion_report.txt"
           Add-Report "scripts/verify_community_ecosystem_full_completion_report.txt" "verify_community_ecosystem_full_completion_report.txt"
+          Add-Report "scripts/verify_release_stable_ga_report.txt" "verify_release_stable_ga_report.txt"
           Add-Report "tests/aegc1/test_report.txt" "tests/aegc1/test_report.txt"
           Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value "### Step outcomes"
           Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value "- detect: ${{ steps.detect.outputs.exit_code }}"
@@ -337,6 +352,7 @@ jobs:
           Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value "- examplesfull(required): ${{ steps.examplesfull.outputs.exit_code }}"
           Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value "- qafull(required): ${{ steps.qafull.outputs.exit_code }}"
           Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value "- communityfull(required): ${{ steps.communityfull.outputs.exit_code }}"
+          Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value "- stablegafull(required): ${{ steps.stablegafull.outputs.exit_code }}"
 
   summary:
     needs: [verify]
