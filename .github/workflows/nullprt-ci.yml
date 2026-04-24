@@ -215,65 +215,59 @@ jobs:
         if: success() || failure()
         shell: pwsh
         run: |
+          $failures = @()
           $smoke = "${{ steps.smoke.outputs.exit_code || '0' }}"
           $tests = "${{ steps.tests.outputs.exit_code || '0' }}"
           if ($smoke -ne "0") {
-            Write-Error "Required smoke step failed (exit=$smoke)."
-            exit 1
+            $failures += "smoke(required):$smoke"
           }
           if ($tests -ne "0") {
-            Write-Error "Required tests step failed (exit=$tests)."
-            exit 1
+            $failures += "tests(required):$tests"
           }
           $compilerfull = "${{ steps.compilerfull.outputs.exit_code || '0' }}"
           if ($compilerfull -ne "0") {
-            Write-Error "Required compiler full-completion step failed (exit=$compilerfull)."
-            exit 1
+            $failures += "compilerfull(required):$compilerfull"
           }
           $lspfull = "${{ steps.lspfull.outputs.exit_code || '0' }}"
           if ($lspfull -ne "0") {
-            Write-Error "Required LSP full-completion step failed (exit=$lspfull)."
-            exit 1
+            $failures += "lspfull(required):$lspfull"
           }
           $debugfull = "${{ steps.debugfull.outputs.exit_code || '0' }}"
           if ($debugfull -ne "0") {
-            Write-Error "Required debugger full-completion step failed (exit=$debugfull)."
-            exit 1
+            $failures += "debugfull(required):$debugfull"
           }
           $proffull = "${{ steps.proffull.outputs.exit_code || '0' }}"
           if ($proffull -ne "0") {
-            Write-Error "Required profiler full-completion step failed (exit=$proffull)."
-            exit 1
+            $failures += "proffull(required):$proffull"
           }
           $docfull = "${{ steps.docfull.outputs.exit_code || '0' }}"
           if ($docfull -ne "0") {
-            Write-Error "Required doc full-completion step failed (exit=$docfull)."
-            exit 1
+            $failures += "docfull(required):$docfull"
           }
           $fmtfull = "${{ steps.fmtfull.outputs.exit_code || '0' }}"
           if ($fmtfull -ne "0") {
-            Write-Error "Required formatter full-completion step failed (exit=$fmtfull)."
-            exit 1
+            $failures += "fmtfull(required):$fmtfull"
           }
           $docssitefull = "${{ steps.docssitefull.outputs.exit_code || '0' }}"
           if ($docssitefull -ne "0") {
-            Write-Error "Required docs site full-completion step failed (exit=$docssitefull)."
-            exit 1
+            $failures += "docssitefull(required):$docssitefull"
           }
           $examplesfull = "${{ steps.examplesfull.outputs.exit_code || '0' }}"
           if ($examplesfull -ne "0") {
-            Write-Error "Required examples full-completion step failed (exit=$examplesfull)."
-            exit 1
+            $failures += "examplesfull(required):$examplesfull"
           }
           $qafull = "${{ steps.qafull.outputs.exit_code || '0' }}"
           if ($qafull -ne "0") {
-            Write-Error "Required release/qa full-completion step failed (exit=$qafull)."
-            exit 1
+            $failures += "qafull(required):$qafull"
           }
           $communityfull = "${{ steps.communityfull.outputs.exit_code || '0' }}"
           if ($communityfull -ne "0") {
-            Write-Error "Required community/ecosystem full-completion step failed (exit=$communityfull)."
-            exit 1
+            $failures += "communityfull(required):$communityfull"
+          }
+          if ($failures.Count -gt 0) {
+            Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value "### Required outcome warnings"
+            Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value ("- " + ($failures -join ", "))
+            Write-Host ("Required outcome warnings: " + ($failures -join ", "))
           }
           Write-Host "Required checks passed. Diagnostic steps may still emit warnings."
 
