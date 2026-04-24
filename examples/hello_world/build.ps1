@@ -5,14 +5,22 @@ param(
 
 $ErrorActionPreference = "Stop"
 
+function Get-HostOs {
+  if ($env:OS -eq "Windows_NT") { return "windows" }
+  if ([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform([System.Runtime.InteropServices.OSPlatform]::Windows)) { return "windows" }
+  if ([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform([System.Runtime.InteropServices.OSPlatform]::OSX)) { return "macos" }
+  return "linux"
+}
+
 $root = Resolve-Path $WorkspaceRoot
 $bootstrapScript = Join-Path $root "scripts/bootstrap_verify.ps1"
-$targetOs = if ($IsWindows) { "windows" } elseif ($IsMacOS) { "macos" } else { "linux" }
-$suffix = if ($IsWindows) { ".exe" } else { "" }
-$buildDir = Join-Path (Resolve-Path ".") "build"
+$targetOs = Get-HostOs
+$suffix = if ($targetOs -eq "windows") { ".exe" } else { "" }
+$scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
+$buildDir = Join-Path $scriptDir "build"
 $workspaceBuildDir = Join-Path $root ("build/" + $targetOs)
 $aegc0Exe = Join-Path $workspaceBuildDir ("aegc0" + $suffix)
-$inputFile = Join-Path (Resolve-Path ".") "src/main.nprt"
+$inputFile = Join-Path $scriptDir "src/main.nprt"
 $outputExe = Join-Path $buildDir ("hello_world" + $suffix)
 $emitC = Join-Path $buildDir "hello_world.generated.c"
 
@@ -20,7 +28,8 @@ New-Item -ItemType Directory -Force -Path $buildDir | Out-Null
 
 if (-not (Test-Path $aegc0Exe)) {
   Write-Host "[hello_world] aegc0 not found, running bootstrap verify to build it..."
-  powershell -ExecutionPolicy Bypass -File $bootstrapScript -WorkspaceRoot $root | Out-Host
+  $psExe = if (Get-Command pwsh -ErrorAction SilentlyContinue) { "pwsh" } else { "powershell" }
+  & $psExe -ExecutionPolicy Bypass -File $bootstrapScript -WorkspaceRoot $root | Out-Host
 }
 
 if (-not (Test-Path $aegc0Exe)) {

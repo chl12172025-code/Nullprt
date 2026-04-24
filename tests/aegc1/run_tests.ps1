@@ -61,6 +61,9 @@ examples_verify_script: $(Test-Path (Join-Path $root "scripts/verify_examples_fu
 qa_verify_script: $(Test-Path (Join-Path $root "scripts/verify_release_qa_full_completion.ps1"))
 community_verify_script: $(Test-Path (Join-Path $root "scripts/verify_community_ecosystem_full_completion.ps1"))
 stable_ga_verify_script: $(Test-Path (Join-Path $root "scripts/verify_release_stable_ga.ps1"))
+nprt_studio_scaffold_verify_script: $(Test-Path (Join-Path $root "scripts/verify_nprt_studio_scaffold.ps1"))
+nprt_studio_release_verify_script: $(Test-Path (Join-Path $root "scripts/verify_release_nprt_studio.ps1"))
+nprt_studio_build_script: $(Test-Path (Join-Path $root "scripts/build_nprt_studio.ps1"))
 api_doc_generator: $(Test-Path (Join-Path $root "scripts/generate_api_docs.ps1"))
 note: runtime execution requires compiled aegc1 driver binary.
 "@ | Set-Content -Encoding UTF8 $report

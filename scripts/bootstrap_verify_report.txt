@@ -1,5 +1,9 @@
-﻿result: blocked
-reason: no C compiler toolchain detected
-stage: Stage0 (aegc0 build)
-toolchain_detected: false
-hint: install Visual Studio Build Tools or LLVM/Clang or MinGW
+﻿result: partial-pass
+toolchain_detected: true
+compiler_name: clang
+compiler_path: C:\Program Files\LLVM\bin\clang.exe
+target_os: windows
+notes:
+- a0->a1 and a0->a2 placeholder chain completed
+- true a1->a2 self-compile requires aegc1 full compiler functionality (pending)
+- ABI/LSP replay should be run after compiler integration

@@ -1,0 +1,9 @@
+{
+  "app.title": "NPRT Studio",
+  "menu.file": "文件",
+  "menu.run": "运行",
+  "menu.tools": "工具",
+  "panel.explorer": "资源管理器",
+  "panel.problems": "问题",
+  "panel.terminal": "终端"
+}

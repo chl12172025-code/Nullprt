@@ -211,6 +211,33 @@ jobs:
           "exit_code=$code" >> $env:GITHUB_OUTPUT
           exit 0
 
+      - name: Verify NPRT Studio scaffold assets (all OS)
+        id: nprtstudiofull
+        shell: pwsh
+        run: |
+          pwsh -ExecutionPolicy Bypass -File scripts/verify_nprt_studio_scaffold.ps1
+          $code = $LASTEXITCODE
+          "exit_code=$code" >> $env:GITHUB_OUTPUT
+          exit 0
+
+      - name: Verify NPRT Studio release readiness assets (all OS)
+        id: nprtstudiorelease
+        shell: pwsh
+        run: |
+          pwsh -ExecutionPolicy Bypass -File scripts/verify_release_nprt_studio.ps1
+          $code = $LASTEXITCODE
+          "exit_code=$code" >> $env:GITHUB_OUTPUT
+          exit 0
+
+      - name: Build NPRT Studio (all OS)
+        id: nprtstudiobuild
+        shell: pwsh
+        run: |
+          pwsh -ExecutionPolicy Bypass -File scripts/build_nprt_studio.ps1
+          $code = $LASTEXITCODE
+          "exit_code=$code" >> $env:GITHUB_OUTPUT
+          exit 0
+
       - name: Enforce required step outcomes
         if: success() || failure()
         shell: pwsh
@@ -323,6 +350,9 @@ jobs:
           Add-Report "scripts/verify_release_qa_full_completion_report.txt" "verify_release_qa_full_completion_report.txt"
           Add-Report "scripts/verify_community_ecosystem_full_completion_report.txt" "verify_community_ecosystem_full_completion_report.txt"
           Add-Report "scripts/verify_release_stable_ga_report.txt" "verify_release_stable_ga_report.txt"
+          Add-Report "scripts/verify_nprt_studio_scaffold_report.txt" "verify_nprt_studio_scaffold_report.txt"
+          Add-Report "scripts/verify_release_nprt_studio_report.txt" "verify_release_nprt_studio_report.txt"
+          Add-Report "scripts/build_nprt_studio_report.txt" "build_nprt_studio_report.txt"
           Add-Report "tests/aegc1/test_report.txt" "tests/aegc1/test_report.txt"
           Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value "### Step outcomes"
           Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value "- detect: ${{ steps.detect.outputs.exit_code }}"
@@ -342,6 +372,9 @@ jobs:
           Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value "- qafull(required): ${{ steps.qafull.outputs.exit_code }}"
           Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value "- communityfull(required): ${{ steps.communityfull.outputs.exit_code }}"
           Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value "- stablegafull(required): ${{ steps.stablegafull.outputs.exit_code }}"
+          Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value "- nprtstudiofull(required): ${{ steps.nprtstudiofull.outputs.exit_code }}"
+          Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value "- nprtstudiorelease(required): ${{ steps.nprtstudiorelease.outputs.exit_code }}"
+          Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value "- nprtstudiobuild(target): ${{ steps.nprtstudiobuild.outputs.exit_code }}"
 
   summary:
     needs: [verify]

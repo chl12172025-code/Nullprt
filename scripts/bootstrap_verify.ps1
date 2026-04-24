@@ -4,6 +4,13 @@ param(
 
 $ErrorActionPreference = "Stop"
 
+function Get-HostOs {
+  if ($env:OS -eq "Windows_NT") { return "windows" }
+  if ([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform([System.Runtime.InteropServices.OSPlatform]::Windows)) { return "windows" }
+  if ([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform([System.Runtime.InteropServices.OSPlatform]::OSX)) { return "macos" }
+  return "linux"
+}
+
 function Write-Step($msg) {
   Write-Host "[bootstrap-verify] $msg"
 }
@@ -13,14 +20,12 @@ $reportPath = Join-Path $root "scripts/bootstrap_verify_report.txt"
 $detectScript = Join-Path $root "scripts/detect_toolchain.ps1"
 
 function Get-ExeSuffix {
-  if ($IsWindows) { return ".exe" }
+  if ((Get-HostOs) -eq "windows") { return ".exe" }
   return ""
 }
 
 function Get-TargetOs {
-  if ($IsWindows) { return "windows" }
-  if ($IsMacOS) { return "macos" }
-  return "linux"
+  return (Get-HostOs)
 }
 
 function Build-Aegc0 {
@@ -32,9 +37,9 @@ function Build-Aegc0 {
   Push-Location $Aegc0Dir
   try {
     if ($Compiler -eq "cl") {
-      & cl /nologo /W3 /O2 /Fe:$OutExe main.c arena.c lexer.c parser.c sema.c emit_c.c driver.c
+      & cl /nologo /W3 /O2 /Fe:$OutExe main.c arena.c lexer.c parser.c sema.c emit_c.c
     } else {
-      & $Compiler -O2 -o $OutExe main.c arena.c lexer.c parser.c sema.c emit_c.c driver.c
+      & $Compiler -O2 -o $OutExe main.c arena.c lexer.c parser.c sema.c emit_c.c
     }
     return ($LASTEXITCODE -eq 0)
   } finally {
@@ -54,7 +59,8 @@ stage: Stage0 (aegc0 build)
   exit 1
 }
 
-$toolJson = & powershell -ExecutionPolicy Bypass -File $detectScript -JsonOnly 2>$null
+$psExe = if (Get-Command pwsh -ErrorAction SilentlyContinue) { "pwsh" } else { "powershell" }
+$toolJson = & $psExe -ExecutionPolicy Bypass -File $detectScript -JsonOnly 2>$null
 if ($LASTEXITCODE -ne 0 -or -not $toolJson) {
   @"
 result: blocked

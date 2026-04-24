@@ -6,6 +6,13 @@ param(
 
 $ErrorActionPreference = "Stop"
 
+function Get-HostOs {
+  if ($env:OS -eq "Windows_NT") { return "windows" }
+  if ([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform([System.Runtime.InteropServices.OSPlatform]::Windows)) { return "windows" }
+  if ([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform([System.Runtime.InteropServices.OSPlatform]::OSX)) { return "macos" }
+  return "linux"
+}
+
 function Set-EnvFromSetOutput {
   param([string[]]$Lines)
   foreach ($line in $Lines) {
@@ -110,8 +117,9 @@ function Detect-MinGW {
 }
 
 $result = $null
+$hostOs = Get-HostOs
 
-if ($IsWindows) {
+if ($hostOs -eq "windows") {
   $result = Detect-VSCompiler
   if (-not $result.found) { $result = Detect-LLVM }
   if (-not $result.found) { $result = Detect-MinGW }

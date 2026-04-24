@@ -15,6 +15,7 @@ CI passes with expected diagnostics in early-stage bootstrap environments.
 - 最小工具链验收清单：`docs/verification/minimal-toolchain-checklist.md`
 
 ### 工具链列表
+- `apps/nprt-studio`：NPRT Studio 原生编辑器（Qt + Scintilla 架构骨架）
 - `aegc1`：Nullprt 编译器驱动
 - `nprt-pkg`：包管理器
 - `nprt-lsp`：语言服务器（LSP 3.17）

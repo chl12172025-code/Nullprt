@@ -1,0 +1,9 @@
+{
+  "app.title": "NPRT Studio",
+  "menu.file": "File",
+  "menu.run": "Run",
+  "menu.tools": "Tools",
+  "panel.explorer": "Explorer",
+  "panel.problems": "Problems",
+  "panel.terminal": "Terminal"
+}

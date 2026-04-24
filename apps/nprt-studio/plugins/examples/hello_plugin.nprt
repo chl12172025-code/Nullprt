@@ -1,0 +1,11 @@
+plugin "hello_plugin" {
+  fn activate(ctx: PluginContext) -> i32 {
+    ctx.register_command("nprt.hello", "Show Hello", "show_hello");
+    return 0;
+  }
+
+  fn show_hello(ctx: PluginContext) -> i32 {
+    ctx.show_message("Hello from NPRT plugin");
+    return 0;
+  }
+}
