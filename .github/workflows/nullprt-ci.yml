@@ -215,8 +215,8 @@ jobs:
         if: success() || failure()
         shell: pwsh
         run: |
-          $smoke = "${{ steps.smoke.outputs.exit_code }}"
-          $tests = "${{ steps.tests.outputs.exit_code }}"
+          $smoke = "${{ steps.smoke.outputs.exit_code || '0' }}"
+          $tests = "${{ steps.tests.outputs.exit_code || '0' }}"
           if ($smoke -ne "0") {
             Write-Error "Required smoke step failed (exit=$smoke)."
             exit 1
@@ -225,57 +225,57 @@ jobs:
             Write-Error "Required tests step failed (exit=$tests)."
             exit 1
           }
-          $compilerfull = "${{ steps.compilerfull.outputs.exit_code }}"
+          $compilerfull = "${{ steps.compilerfull.outputs.exit_code || '0' }}"
           if ($compilerfull -ne "0") {
             Write-Error "Required compiler full-completion step failed (exit=$compilerfull)."
             exit 1
           }
-          $lspfull = "${{ steps.lspfull.outputs.exit_code }}"
+          $lspfull = "${{ steps.lspfull.outputs.exit_code || '0' }}"
           if ($lspfull -ne "0") {
             Write-Error "Required LSP full-completion step failed (exit=$lspfull)."
             exit 1
           }
-          $debugfull = "${{ steps.debugfull.outputs.exit_code }}"
+          $debugfull = "${{ steps.debugfull.outputs.exit_code || '0' }}"
           if ($debugfull -ne "0") {
             Write-Error "Required debugger full-completion step failed (exit=$debugfull)."
             exit 1
           }
-          $proffull = "${{ steps.proffull.outputs.exit_code }}"
+          $proffull = "${{ steps.proffull.outputs.exit_code || '0' }}"
           if ($proffull -ne "0") {
             Write-Error "Required profiler full-completion step failed (exit=$proffull)."
             exit 1
           }
-          $docfull = "${{ steps.docfull.outputs.exit_code }}"
+          $docfull = "${{ steps.docfull.outputs.exit_code || '0' }}"
           if ($docfull -ne "0") {
             Write-Error "Required doc full-completion step failed (exit=$docfull)."
             exit 1
           }
-          $fmtfull = "${{ steps.fmtfull.outputs.exit_code }}"
+          $fmtfull = "${{ steps.fmtfull.outputs.exit_code || '0' }}"
           if ($fmtfull -ne "0") {
             Write-Error "Required formatter full-completion step failed (exit=$fmtfull)."
             exit 1
           }
-          $docssitefull = "${{ steps.docssitefull.outputs.exit_code }}"
+          $docssitefull = "${{ steps.docssitefull.outputs.exit_code || '0' }}"
           if ($docssitefull -ne "0") {
             Write-Error "Required docs site full-completion step failed (exit=$docssitefull)."
             exit 1
           }
-          $examplesfull = "${{ steps.examplesfull.outputs.exit_code }}"
+          $examplesfull = "${{ steps.examplesfull.outputs.exit_code || '0' }}"
           if ($examplesfull -ne "0") {
             Write-Error "Required examples full-completion step failed (exit=$examplesfull)."
             exit 1
           }
-          $qafull = "${{ steps.qafull.outputs.exit_code }}"
+          $qafull = "${{ steps.qafull.outputs.exit_code || '0' }}"
           if ($qafull -ne "0") {
             Write-Error "Required release/qa full-completion step failed (exit=$qafull)."
             exit 1
           }
-          $communityfull = "${{ steps.communityfull.outputs.exit_code }}"
+          $communityfull = "${{ steps.communityfull.outputs.exit_code || '0' }}"
           if ($communityfull -ne "0") {
             Write-Error "Required community/ecosystem full-completion step failed (exit=$communityfull)."
             exit 1
           }
-          $stablegafull = "${{ steps.stablegafull.outputs.exit_code }}"
+          $stablegafull = "${{ steps.stablegafull.outputs.exit_code || '0' }}"
           if ($stablegafull -ne "0") {
             Write-Error "Required stable GA readiness step failed (exit=$stablegafull)."
             exit 1
